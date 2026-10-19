@@ -4,470 +4,475 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ábaco · tus impuestos, cuenta por cuenta</title>
-<meta name="description" content="ábaco recalcula tus impuestos de autónomo desde tus facturas, revisa lo que presenta tu gestoría, estima tu Renta y te avisa de lo que puedes ahorrar. Tus datos no salen de tu ordenador.">
+<meta name="description" content="ábaco recalcula tus impuestos desde tus facturas y nóminas, revisa lo que presenta tu gestoría, estima tu Renta y te avisa de lo que puedes ahorrar. Tus datos no salen de tu ordenador.">
 <meta property="og:title" content="ábaco · tus impuestos, cuenta por cuenta">
 <meta property="og:description" content="Revisa lo que presenta tu gestoría, anticipa tu Renta y no dejes ahorro sobre la mesa.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#f2f3ef">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2b5a'/%3E%3Cpath d='M6 11h20M6 21h20' stroke='%23c9cede' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='11' r='3.6' fill='%23f0a92e'/%3E%3Ccircle cx='20' cy='21' r='3.6' fill='%23f0a92e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#eef3ea">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%2313342a'/%3E%3Cpath d='M6 11h20M6 21h20' stroke='%23eef3ea' stroke-opacity='.55' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='11' r='3.6' fill='%23b23a2e'/%3E%3Ccircle cx='20' cy='21' r='3.6' fill='%23b23a2e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Schibsted+Grotesk:wght@400;500;600;700&family=Young+Serif&display=swap">
 <style>
-/* Layout: una sola columna ancha con bandas; el ábaco del hero es el hilo visual (varillas = modelos, cuentas = cifras). */
+/* Libro de cuentas · Mosaico.
+   Retícula: los renglones del papel (32 px) son la retícula. En escritorio, 4 × 3 tarjetas sin scroll:
+   el alto de fila y los huecos son un número entero de renglones (lo calcula el script). En el móvil, una columna. */
 :root {
-  --papel: #f2f3ef;        /* fondo: papel de impreso oficial, gris verdoso */
-  --tarjeta: #ffffff;
-  --tinta: #141a2e;        /* texto */
-  --tinta-suave: #545b70;
-  --linea: #d9dcd4;
-  --varilla: #b9bdc9;
-  --cobalto: #1c2b5a;      /* marca */
-  --cobalto-claro: #e4e8f5;
-  --ambar: #f0a92e;        /* cuentas del ábaco */
-  --ambar-oscuro: #b8740a;
-  --ok: #1e7a4c;
-  --ok-fondo: #e0f1e7;
-  --alerta: #a35f00;
-  --alerta-fondo: #fbefd6;
-  --rojo: #b8352e;
-  --display: "Gloock", "Georgia", serif;
-  --texto: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "Consolas", monospace;
+  --renglon: 32px;
+  --papel: #eef3ea; --papel-2: #e3ebdf; --tarjeta: #f8fbf5; --tinta: #13342a; --tinta-suave: #4c6a5e;
+  --linea: #c4d4c1; --pauta: rgba(150, 180, 150, .42); --margen: rgba(178, 58, 46, .38);
+  --marca: #13342a; --sobre-marca: #eef3ea; --tit-fondo: #13342a; --tit-tinta: #eef3ea; --rojo: #b23a2e; --rojo-oscuro: #7d241b; --verde: #2f6b55; --varilla: #8fa896;
+  --ok: #1f6b45; --ok-fondo: #d3eadb; --alerta: #8a5a00; --alerta-fondo: #f1e4bf;
+  --titulo: "Young Serif", Georgia, serif;
+  --texto: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --cifra: "Courier Prime", "Courier New", monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --papel: #0f1426; --tarjeta: #161d35; --tinta: #e9ecf5; --tinta-suave: #a2a9c0; --linea: #2a3354; --varilla: #3c466b;
-    --cobalto: #aebcf2; --cobalto-claro: #222c52; --ambar: #f3b649; --ambar-oscuro: #f3b649;
-    --ok: #6fd3a0; --ok-fondo: #15392a; --alerta: #f0bd63; --alerta-fondo: #3a2c10; --rojo: #f08a80; color-scheme: dark;
+    --papel: #0f1a16; --papel-2: #13221c; --tarjeta: #15241e; --tinta: #e4eee6; --tinta-suave: #9fb6aa;
+    --linea: #2a4237; --pauta: rgba(120, 170, 140, .13); --margen: rgba(239, 122, 109, .35);
+    --marca: #e4eee6; --sobre-marca: #0f1a16; --tit-fondo: #1d3a2f; --tit-tinta: #e9f2ea; --rojo: #ef7a6d; --rojo-oscuro: #b8463a; --verde: #7cc4a2; --varilla: #4f6b5e;
+    --ok: #7cd4a6; --ok-fondo: #17392a; --alerta: #f0c26b; --alerta-fondo: #3a2e12; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --papel: #0f1426; --tarjeta: #161d35; --tinta: #e9ecf5; --tinta-suave: #a2a9c0; --linea: #2a3354; --varilla: #3c466b;
-  --cobalto: #aebcf2; --cobalto-claro: #222c52; --ambar: #f3b649; --ambar-oscuro: #f3b649;
-  --ok: #6fd3a0; --ok-fondo: #15392a; --alerta: #f0bd63; --alerta-fondo: #3a2c10; --rojo: #f08a80; color-scheme: dark;
+  --papel: #0f1a16; --papel-2: #13221c; --tarjeta: #15241e; --tinta: #e4eee6; --tinta-suave: #9fb6aa;
+  --linea: #2a4237; --pauta: rgba(120, 170, 140, .13); --margen: rgba(239, 122, 109, .35);
+  --marca: #e4eee6; --sobre-marca: #0f1a16; --tit-fondo: #1d3a2f; --tit-tinta: #e9f2ea; --rojo: #ef7a6d; --rojo-oscuro: #b8463a; --verde: #7cc4a2; --varilla: #4f6b5e;
+  --ok: #7cd4a6; --ok-fondo: #17392a; --alerta: #f0c26b; --alerta-fondo: #3a2e12; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--papel); color: var(--tinta); font: 17px/1.6 var(--texto); }
-img, svg { max-width: 100%; }
-a { color: inherit; }
-:focus-visible { outline: 2px solid var(--ambar); outline-offset: 3px; border-radius: 4px; }
-
-.envoltura { max-width: 72rem; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
-.banda { padding-block: clamp(4rem, 9vw, 7.5rem); }
-.banda + .banda { border-top: 1px solid var(--linea); }
-
-h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
-h1 { font-family: var(--display); font-size: clamp(2.6rem, 6.2vw, 4.6rem); line-height: 1.02; letter-spacing: -0.01em; }
-h2 { font-family: var(--display); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
-h3 { font-size: 1.15rem; font-weight: 600; }
-p { margin: 0; }
-.entradilla { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--tinta-suave); max-width: 38ch; }
-.etiqueta { font: 500 .78rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); }
-.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-
-/* Cabecera */
-.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; }
-.marca { font-family: var(--display); font-size: 1.75rem; color: var(--cobalto); text-decoration: none; display: inline-flex; align-items: center; gap: .55rem; }
-.marca svg { width: 28px; height: 28px; }
-.cabecera nav { display: flex; gap: 1.5rem; font-size: .95rem; }
-.cabecera nav a { text-decoration: none; color: var(--tinta-suave); }
-.cabecera nav a:hover { color: var(--tinta); }
-@media (max-width: 40rem) { .cabecera nav a:not(.boton) { display: none; } }
-
-.boton { display: inline-flex; align-items: center; gap: .5rem; padding: .8rem 1.25rem; border-radius: 999px; background: var(--cobalto); color: var(--papel); font-weight: 600; text-decoration: none; border: 0; cursor: pointer; font: 600 1rem/1 var(--texto); }
-.boton:hover { filter: brightness(1.12); }
-.boton.secundario { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--linea); }
-.cabecera nav a.boton { padding: .6rem 1rem; font-size: .9rem; color: var(--papel); }
-
-/* Hero */
-.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; padding-block: clamp(2.5rem, 6vw, 5rem) clamp(4rem, 8vw, 6.5rem); }
-.hero-texto { display: grid; gap: 1.6rem; }
-.hero h1 em { font-style: normal; color: var(--cobalto); }
-.acciones { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
-.nota-hero { font-size: .9rem; color: var(--tinta-suave); }
-@media (max-width: 52rem) { .hero { grid-template-columns: 1fr; } }
-
-/* El ábaco */
-.abaco { margin: 0; background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 18px; padding: clamp(1.1rem, 2.5vw, 1.75rem); display: grid; gap: 1rem; }
-.abaco-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
-.fila { display: grid; grid-template-columns: 4.2rem 1fr 6.6rem; align-items: center; gap: .9rem; }
-.fila .modelo { font: 500 .95rem var(--mono); }
-.fila .modelo small { display: block; font-size: .72rem; color: var(--tinta-suave); font-family: var(--texto); }
-.varilla { position: relative; height: 34px; }
-.varilla::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--varilla); border-radius: 2px; }
-.cuentas { position: absolute; inset: 0; display: flex; align-items: center; gap: 3px; }
-.cuenta { display: block; width: clamp(16px, 2.2vw, 26px); aspect-ratio: 1.25; border-radius: 50% / 46%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--ambar) 55%, white), var(--ambar) 55%, var(--ambar-oscuro)); flex: none; }
-.cuenta.gris { background: var(--varilla); opacity: .55; }
-.resultado { justify-self: end; font: 500 .82rem var(--mono); padding: .3rem .55rem; border-radius: 999px; background: var(--ok-fondo); color: var(--ok); white-space: nowrap; }
-.abaco-pie { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px dashed var(--linea); padding-top: .9rem; font-size: .92rem; }
-.abaco-pie strong { font-family: var(--display); font-weight: 400; font-size: 1.35rem; color: var(--ok); }
-@media (prefers-reduced-motion: no-preference) {
-  .cuentas.desliza { animation: deslizar 1.4s cubic-bezier(.2,.8,.2,1) both; }
-  .fila:nth-child(2) .cuentas.desliza { animation-delay: .15s; }
-  .fila:nth-child(3) .cuentas.desliza { animation-delay: .3s; }
-  .fila:nth-child(4) .cuentas.desliza { animation-delay: .45s; }
-  .resultado { animation: aparecer .5s 1.5s both; }
-  @keyframes deslizar { from { transform: translateX(var(--desde, 35%)); } to { transform: none; } }
-  @keyframes aparecer { from { transform: scale(.9); box-shadow: 0 0 0 0 var(--ok-fondo); } 60% { transform: scale(1.06); box-shadow: 0 0 0 6px var(--ok-fondo); } to { transform: none; box-shadow: none; } }
+body {
+  margin: 0; color: var(--tinta); font: 16px/1.5 var(--texto);
+  background-color: var(--papel);
+  background-image:
+    linear-gradient(90deg, transparent 1.4rem, var(--margen) 1.4rem, var(--margen) calc(1.4rem + 1px), transparent calc(1.4rem + 1px)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--renglon) - 1px), var(--pauta) calc(var(--renglon) - 1px) var(--renglon));
+  background-attachment: local;
+  transition: background-color .3s, color .3s;
 }
-@media (max-width: 26rem) { .fila { grid-template-columns: 3.4rem 1fr 5.6rem; gap: .5rem; } }
+html.sin-scroll, html.sin-scroll body { height: 100%; overflow: hidden; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--rojo); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: var(--titulo); font-weight: 400; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.etiqueta { font: 400 .78rem/1 var(--cifra); letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-suave); }
+.num { font-family: var(--cifra); font-variant-numeric: tabular-nums; }
 
-/* Problema */
-.problema { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
-.preguntas { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--linea); border: 1px solid var(--linea); border-radius: 14px; overflow: hidden; }
-.preguntas li { background: var(--tarjeta); padding: 1.1rem 1.25rem; display: grid; grid-template-columns: 2.2rem 1fr; gap: .75rem; align-items: baseline; }
-.preguntas .casilla { font: 500 .78rem var(--mono); color: var(--tinta-suave); border: 1px solid var(--linea); border-radius: 4px; padding: .1rem .3rem; text-align: center; }
-@media (max-width: 52rem) { .problema { grid-template-columns: 1fr; } }
+/* Cabecera: exactamente dos renglones */
+.cabecera { height: calc(var(--renglon) * 2); display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-left: max(2rem, env(safe-area-inset-left, 0px)); padding-right: max(1.25rem, env(safe-area-inset-right, 0px)); max-width: 84rem; margin-inline: auto; }
+.logo { display: inline-flex; align-items: center; gap: .55rem; font: 400 1.6rem var(--titulo); color: var(--marca); text-decoration: none; }
+.logo svg { width: 28px; height: 28px; }
+.acciones-cab { display: flex; align-items: center; gap: .6rem; }
+.boton { display: inline-flex; align-items: center; gap: .55rem; padding: .62rem 1.05rem .62rem .9rem; border: 0; border-radius: 3px; background: var(--marca); color: var(--sobre-marca); font: 600 .95rem var(--texto); text-decoration: none; cursor: pointer; position: relative; }
+.boton::before { content: ""; width: .55rem; height: .55rem; border-radius: 50%; background: var(--rojo); transition: transform .45s cubic-bezier(.3,1.6,.5,1); }
+.boton:hover::before { transform: translateX(-2px) scale(1.35); }
+.boton.borde { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.tema { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--linea); background: var(--tarjeta); color: var(--tinta); cursor: pointer; display: grid; place-items: center; }
+.tema svg { width: 18px; height: 18px; }
 
-/* Pasos */
-.cabeza-seccion { display: grid; gap: 1rem; max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
-.pasos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; counter-reset: paso; }
-.paso { display: grid; gap: .6rem; align-content: start; padding-top: 1.25rem; border-top: 2px solid var(--cobalto); }
-.paso::before { counter-increment: paso; content: "0" counter(paso); font: 500 .85rem var(--mono); color: var(--cobalto); }
-.paso p { color: var(--tinta-suave); }
-@media (max-width: 52rem) { .pasos { grid-template-columns: 1fr; } }
+/* Mosaico */
+.mosaico {
+  max-width: 84rem; margin-inline: auto;
+  padding: var(--renglon) max(2rem, env(safe-area-inset-right, 0px)) var(--renglon) max(2rem, env(safe-area-inset-left, 0px));
+  display: grid; gap: var(--hueco, var(--renglon));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, var(--fila, auto));
+  grid-template-areas: "tit tit pan pan" "pro com pan pan" "aho pri qui lis";
+}
+.losa { position: relative; min-width: 0; min-height: 0; background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 4px; padding: 1.1rem 1.2rem; display: flex; flex-direction: column; justify-content: space-between; gap: .6rem; overflow: hidden; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .25s; }
+button.losa:hover, .losa.panel:hover { transform: translateY(-3px); border-color: var(--varilla); box-shadow: 0 22px 36px -28px rgba(19, 52, 42, .55); }
+.losa h2 { font-size: clamp(1.15rem, 1.6vw, 1.5rem); line-height: 1.15; padding-right: 2.2rem; }
+.losa p { color: var(--tinta-suave); font-size: .92rem; }
+.abrir { position: absolute; top: .9rem; right: .9rem; width: 1.8rem; height: 1.8rem; border-radius: 50%; border: 1px solid var(--linea); background: var(--papel); display: grid; place-items: center; font: 400 1rem var(--cifra); transition: transform .35s, background-color .25s, color .25s; }
+.losa:hover .abrir { transform: rotate(45deg); background: var(--rojo); color: #fff; border-color: var(--rojo); }
+.l-tit { grid-area: tit; cursor: default; background: var(--tit-fondo); color: var(--tit-tinta); border-color: var(--tit-fondo); justify-content: center; gap: .7rem; }
+.l-tit h1 { font-size: clamp(1.9rem, min(3.1vw, calc(var(--fila-px, 320px) * .19)), 3rem); line-height: 1.02; }
+html.fila-baja .l-tit p { display: none; }
+html.con-scroll .l-tit h1 { font-size: clamp(2.1rem, 8.5vw, 3.2rem); }
+html.fila-baja .losa p { font-size: .86rem; }
+.l-tit h1 span { color: var(--rojo); }
+.l-tit p { color: inherit; opacity: .82; font-size: .98rem; max-width: 52ch; }
+.l-tit .etiqueta { color: inherit; opacity: .7; }
+.l-tit .fila-cta { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.l-tit .boton { background: var(--tit-tinta); color: var(--tit-fondo); }
+.l-pan { grid-area: pan; background: var(--papel-2); padding: 1rem; gap: .7rem; }
+.l-pro { grid-area: pro; } .l-com { grid-area: com; } .l-aho { grid-area: aho; } .l-pri { grid-area: pri; } .l-qui { grid-area: qui; }
+.l-lis { grid-area: lis; background: var(--rojo); color: #fff; border-color: var(--rojo); }
+.l-lis p, .l-lis .etiqueta { color: inherit; opacity: .85; }
+.l-lis .abrir { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.4); }
+.cifra-grande { font: 700 clamp(1.6rem, 2.6vw, 2.3rem)/1 var(--cifra); letter-spacing: -0.02em; }
 
-/* Más que revisar */
-.funciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
-.funcion { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 16px; padding: 1.5rem; display: grid; gap: .8rem; align-content: start; }
-.funcion p { color: var(--tinta-suave); }
-.ejemplo { margin-top: .3rem; background: var(--papel); border-radius: 10px; padding: .9rem 1rem; display: grid; gap: .45rem; font-size: .9rem; }
-.ejemplo .linea-ej { display: flex; justify-content: space-between; gap: 1rem; }
-.chip { display: inline-block; white-space: nowrap; font: 500 .74rem var(--mono); padding: .15rem .5rem; border-radius: 999px; background: var(--cobalto-claro); color: var(--cobalto); }
-.chip.ok { background: var(--ok-fondo); color: var(--ok); }
-.chip.alerta { background: var(--alerta-fondo); color: var(--alerta); }
-.barra { height: .5rem; border-radius: 999px; background: var(--linea); overflow: hidden; }
-.barra span { display: block; height: 100%; width: 97%; background: var(--alerta); border-radius: 999px; }
-@media (max-width: 52rem) { .funciones { grid-template-columns: 1fr; } }
+/* Preview del dashboard */
+.preview { flex: 1; min-height: 0; position: relative; border: 1px solid var(--linea); border-radius: 4px; background: var(--tarjeta); overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.preview .barra-v { display: flex; gap: .35rem; align-items: center; padding: .45rem .7rem; border-bottom: 1px solid var(--linea); background: var(--papel); font: .72rem var(--cifra); color: var(--tinta-suave); }
+.preview .barra-v i { width: 8px; height: 8px; border-radius: 50%; background: var(--varilla); }
+.preview .lienzo { padding: .8rem; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: min-content; gap: .55rem; font-size: .74rem; overflow: hidden; }
+.mini { border: 1px solid var(--linea); border-radius: 3px; padding: .5rem .6rem; display: grid; gap: .3rem; background: var(--tarjeta); }
+.mini.ancho { grid-column: span 2; }
+.mini b { font-weight: 600; }
+.mini .rojo { color: var(--rojo); font: 700 1.15rem var(--cifra); }
+.velo { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(to top, color-mix(in srgb, var(--papel-2) 85%, transparent), transparent 60%); }
+.velo span { align-self: end; margin-bottom: 1rem; }
+.pastilla { display: inline-block; white-space: nowrap; font: 400 .72rem var(--cifra); padding: .1rem .45rem; border-radius: 999px; background: var(--papel-2); color: var(--tinta); border: 1px solid var(--linea); }
+.pastilla.ok { background: var(--ok-fondo); color: var(--ok); border-color: transparent; }
+.pastilla.alerta { background: var(--alerta-fondo); color: var(--alerta); border-color: transparent; }
+.barrita { height: 6px; border-radius: 3px; background: var(--linea); overflow: hidden; }
+.barrita span { display: block; height: 100%; border-radius: 3px; background: var(--alerta); width: var(--lleno, 90%); transform-origin: left; }
 
-/* Panel de ejemplo */
-.ventana { margin: 0; background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--cobalto) 45%, transparent); }
-.ventana-barra { display: flex; align-items: center; gap: .4rem; padding: .7rem 1rem; border-bottom: 1px solid var(--linea); background: var(--papel); }
-.ventana-barra i { width: 10px; height: 10px; border-radius: 50%; background: var(--varilla); }
-.ventana-barra span { margin-left: .6rem; font: .78rem var(--mono); color: var(--tinta-suave); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pv { padding: clamp(1rem, 3vw, 2rem); display: grid; gap: 1.25rem; font-size: .9rem; }
-.pv-cab { display: grid; gap: .3rem; }
-.pv-titulo { font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.1; }
-.pv-cab p { color: var(--tinta-suave); }
-.pv-rejilla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
-.pv-bloque { border: 1px solid var(--linea); border-radius: 12px; padding: .9rem 1rem; display: grid; gap: .55rem; align-content: start; min-width: 0; }
-.pv-bloque.ancho { grid-column: span 2; }
-.pv-sub { font: 500 .72rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-suave); }
-.pv-aviso { display: grid; gap: .1rem; padding-left: .7rem; border-left: 3px solid var(--varilla); }
-.pv-aviso.alto { border-color: var(--rojo); }
-.pv-aviso.medio { border-color: var(--alerta); }
-.pv-aviso span { color: var(--tinta-suave); font-size: .84rem; }
-.pv-fila { display: flex; align-items: center; gap: .6rem; justify-content: space-between; }
-.pv-fila > span:nth-child(2):not(.chip) { flex: 1; min-width: 0; }
-.pv-fila.hecho .num { text-decoration: line-through; color: var(--tinta-suave); }
-.pv-tabla { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: .45rem 1rem; align-items: center; }
-.pv-th { font: 500 .7rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-suave); }
-.pv-tabla .n { text-align: right; }
-.pv-tabla .num { white-space: nowrap; }
-@media (max-width: 40rem) { .pv-tabla { gap: .45rem .6rem; font-size: .8rem; grid-template-columns: auto 1fr auto; } .pv-tabla > :nth-child(4n+3) { display: none; } .pv-tabla .chip { font-size: .66rem; padding: .1rem .35rem; } }
-.pv-grande { font-family: var(--display); font-weight: 400; font-size: 1.6rem; color: var(--rojo); }
-.pv-nota { color: var(--tinta-suave); font-size: .82rem; }
-@media (max-width: 64rem) { .pv-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 40rem) { .pv-rejilla { grid-template-columns: 1fr; } .pv-bloque.ancho { grid-column: auto; } }
+/* Una columna con scroll: móvil o pantallas bajas */
+html.con-scroll .mosaico { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: auto; grid-template-areas: "tit tit" "pan pan" "pro com" "aho pri" "qui lis"; }
+html.con-scroll .losa { min-height: calc(var(--renglon) * 5); }
+html.con-scroll .l-pan { min-height: calc(var(--renglon) * 13); }
+@media (max-width: 40rem) {
+  html.con-scroll .mosaico { grid-template-columns: 1fr; grid-template-areas: "tit" "pan" "pro" "com" "aho" "pri" "qui" "lis"; padding-left: max(1rem, env(safe-area-inset-left, 0px)); padding-right: max(1rem, env(safe-area-inset-right, 0px)); }
+  .cabecera { padding-left: max(1.8rem, env(safe-area-inset-left, 0px)); }
+  .acciones-cab .boton { display: none; }
+}
+.pie { max-width: 84rem; margin-inline: auto; padding: 0 2rem calc(var(--renglon) * 2); font-size: .82rem; color: var(--tinta-suave); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+html.sin-scroll .pie { display: none; }
+.pie-mini { position: fixed; right: 2rem; bottom: .35rem; font-size: .74rem; color: var(--tinta-suave); display: none; }
+html.sin-scroll .pie-mini { display: block; }
 
-/* Quién está detrás */
-.autor { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
-.autor-marca svg { width: 100%; max-width: 14rem; height: auto; }
-.autor-texto { display: grid; gap: 1rem; max-width: 62ch; }
-.autor-texto p { color: var(--tinta-suave); }
-.autor-texto a { color: var(--cobalto); font-weight: 600; }
-@media (max-width: 40rem) { .autor { grid-template-columns: 1fr; } .autor-marca svg { max-width: 6rem; } }
+/* Capa de detalle */
+.fondo-capa { position: fixed; inset: 0; z-index: 40; background: color-mix(in srgb, var(--papel) 55%, transparent); backdrop-filter: blur(5px); }
+.capa { position: fixed; z-index: 41; inset: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); max-width: 64rem; margin-inline: auto; background-color: var(--tarjeta); background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--renglon) - 1px), var(--pauta) calc(var(--renglon) - 1px) var(--renglon)); border: 1px solid var(--linea); border-radius: 4px; overflow: auto; box-shadow: 0 40px 100px -30px rgba(0,0,0,.45); }
+.capa-cab { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1rem .8rem 1.6rem; background: color-mix(in srgb, var(--tarjeta) 92%, transparent); border-bottom: 1px solid var(--linea); }
+.cerrar { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--linea); background: var(--papel); color: var(--tinta); cursor: pointer; font-size: 1.1rem; }
+.capa-cuerpo { padding: clamp(1.4rem, 4vw, 2.6rem); display: grid; gap: 1.2rem; }
+.capa-cuerpo h2 { font-size: clamp(1.7rem, 3.4vw, 2.6rem); line-height: 1.08; }
+.capa-cuerpo > p, .capa-cuerpo .entradilla { color: var(--tinta-suave); max-width: 62ch; font-size: 1.05rem; }
+.preguntas { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--linea); border: 1px solid var(--linea); }
+.preguntas li { background: var(--tarjeta); padding: .9rem 1.1rem; display: grid; grid-template-columns: 2rem 1fr; gap: .8rem; align-items: center; }
+.casilla { position: relative; width: 1.55rem; height: 1.55rem; border: 1.5px solid var(--tinta); display: grid; place-items: center; font: .66rem var(--cifra); }
+.casilla svg { position: absolute; inset: 2px; }
+.casilla path { stroke: var(--ok); stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .35s ease; }
+.preguntas li.marcada .casilla path, .preguntas li:hover .casilla path { stroke-dashoffset: 0; }
+.preguntas li.marcada .casilla span, .preguntas li:hover .casilla span { opacity: 0; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+.ficha { border: 1px solid var(--linea); border-radius: 4px; background: var(--tarjeta); padding: 1.1rem; display: grid; gap: .5rem; align-content: start; }
+.ficha p { color: var(--tinta-suave); font-size: .94rem; }
+.ejemplo { background: var(--papel); border-radius: 3px; padding: .7rem .8rem; display: grid; gap: .45rem; font-size: .88rem; }
+.linea-ej { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.lista li { padding-left: 1.4rem; position: relative; }
+.lista li::before { content: ""; position: absolute; left: .2rem; top: .55em; width: 9px; height: 9px; border-radius: 50%; background: var(--verde); }
+.lista.no li { color: var(--tinta-suave); } .lista.no li::before { background: var(--varilla); }
+.correo { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: .95rem; color: var(--tinta-suave); }
+.correo code { font-family: var(--cifra); color: var(--tinta); background: var(--papel); border: 1px solid var(--linea); padding: .2rem .5rem; user-select: all; }
+.copiar { font: 500 .85rem var(--texto); background: none; border: 1px solid var(--linea); border-radius: 3px; padding: .3rem .65rem; color: var(--tinta); cursor: pointer; }
 
-/* Privacidad */
-.privacidad { background: var(--cobalto); color: var(--papel); border-radius: 24px; padding: clamp(2rem, 5vw, 4rem); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
-.privacidad h2 { color: var(--papel); }
-.privacidad p { opacity: .85; }
-.privacidad ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
-.privacidad li { display: grid; grid-template-columns: 1.6rem 1fr; gap: .6rem; }
-.privacidad li::before { content: ""; width: 12px; height: 12px; margin-top: .45rem; border-radius: 50%; background: var(--ambar); }
-@media (max-width: 52rem) { .privacidad { grid-template-columns: 1fr; } }
-
-/* Para quién y rumbo */
-.dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2rem, 5vw, 4rem); }
-.lista { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: .7rem; }
-.lista li { padding-left: 1.6rem; position: relative; }
-.lista li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 600; }
-.lista.no li::before { content: "·"; color: var(--tinta-suave); font-weight: 600; left: .35rem; }
-.lista.no li { color: var(--tinta-suave); }
-.rumbo { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0; }
-.rumbo li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; padding-block: .85rem; border-top: 1px solid var(--linea); }
-.rumbo li:first-child { border-top: 0; }
-.rumbo .cuando { font: 500 .8rem var(--mono); color: var(--tinta-suave); padding-top: .2rem; }
-.rumbo .hoy .cuando { color: var(--ok); }
-@media (max-width: 52rem) { .dos { grid-template-columns: 1fr; } }
-
-/* Cierre */
-.cierre { text-align: center; display: grid; justify-items: center; gap: 1.4rem; }
-.cierre .entradilla { max-width: 44ch; }
-.correo { display: inline-flex; align-items: center; gap: .5rem; flex-wrap: wrap; justify-content: center; font-size: .95rem; color: var(--tinta-suave); }
-.correo code { font-family: var(--mono); color: var(--tinta); background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 6px; padding: .25rem .5rem; user-select: all; }
-.copiar { font: 500 .85rem var(--texto); background: none; border: 1px solid var(--linea); border-radius: 6px; padding: .3rem .6rem; color: var(--tinta); cursor: pointer; }
-
-footer { padding-block: 2.5rem 3rem; border-top: 1px solid var(--linea); font-size: .88rem; color: var(--tinta-suave); display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-footer p { max-width: 62ch; }
+/* Demo del dashboard */
+.selector-perfil { display: inline-flex; padding: 3px; gap: 3px; border: 1px solid var(--linea); border-radius: 4px; background: var(--papel); }
+.selector-perfil button { border: 0; background: transparent; color: var(--tinta-suave); font: 600 .9rem var(--texto); padding: .5rem .9rem; border-radius: 3px; cursor: pointer; transition: background-color .25s, color .25s; }
+.selector-perfil button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); }
+.demo-resumen { font-size: 1.02rem; color: var(--tinta-suave); }
+.demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.bloque { border: 1px solid var(--linea); border-radius: 4px; background: var(--tarjeta); padding: 1rem; display: grid; gap: .55rem; align-content: start; min-width: 0; }
+.bloque.ancho { grid-column: span 2; }
+.bloque.todo { grid-column: 1 / -1; }
+.aviso { padding-left: .7rem; border-left: 3px solid var(--alerta); display: grid; gap: .1rem; }
+.aviso.alto { border-color: var(--rojo); }
+.aviso span { color: var(--tinta-suave); font-size: .86rem; }
+.fila-plazo { display: flex; align-items: center; gap: .6rem; justify-content: space-between; font-size: .9rem; }
+.fila-plazo > span:nth-child(2) { flex: 1; min-width: 0; }
+.fila-plazo.hecho .num { text-decoration: line-through; color: var(--tinta-suave); }
+.tabla { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: .5rem 1rem; align-items: center; font-size: .9rem; }
+.tabla .th { font: .68rem var(--cifra); text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-suave); }
+.tabla .n { text-align: right; font-family: var(--cifra); white-space: nowrap; }
+.grande { font: 700 1.9rem/1.1 var(--cifra); letter-spacing: -0.02em; }
+.grande.pagar { color: var(--rojo); } .grande.cobrar { color: var(--ok); }
+.nota { color: var(--tinta-suave); font-size: .84rem; }
+@media (max-width: 52rem) { .demo { grid-template-columns: 1fr; } .bloque.ancho { grid-column: auto; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
-<div class="envoltura">
-  <header class="cabecera">
-    <a class="marca" href="#" aria-label="ábaco, inicio">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--cobalto)"/><path d="M6 11h20M6 21h20" stroke="var(--papel)" stroke-opacity=".55" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--ambar)"/><circle cx="20" cy="21" r="3.6" fill="var(--ambar)"/></svg>
-      ábaco
-    </a>
-    <nav aria-label="Principal">
-      <a href="#como">Cómo funciona</a>
-      <a href="#panel">El panel</a>
-      <a href="#privacidad">Privacidad</a>
-      <a class="boton" href="#lista">Quiero probarlo</a>
-    </nav>
-  </header>
+<header class="cabecera">
+  <a class="logo" href="#" aria-label="ábaco, inicio">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="4" fill="var(--marca)"/><path d="M6 11h20M6 21h20" stroke="var(--sobre-marca)" stroke-opacity=".55" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--rojo)"/><circle cx="20" cy="21" r="3.6" fill="var(--verde)"/></svg>
+    ábaco
+  </a>
+  <div class="acciones-cab">
+    <button class="tema" type="button" id="tema" aria-label="Cambiar a modo oscuro"></button>
+    <button class="boton" type="button" data-abrir="lista">Quiero probarlo</button>
+  </div>
+</header>
 
-  <main>
-    <section class="hero" aria-labelledby="titulo">
-      <div class="hero-texto">
-        <span class="etiqueta">Para autónomos en España</span>
-        <h1 id="titulo">Tus impuestos, <em>cuenta por cuenta.</em></h1>
-        <p class="entradilla">ábaco recalcula tus impuestos desde tus facturas, revisa lo que presenta tu gestoría y te avisa de lo que te puedes ahorrar. Para que cada trimestre cuadre y sepas por qué.</p>
-        <div class="acciones">
-          <a class="boton" href="#lista">Apúntate a la lista</a>
-          <a class="boton secundario" href="#como">Cómo funciona</a>
-        </div>
-        <p class="nota-hero">Funciona con Claude, el asistente de IA. Tus datos no salen de tu ordenador.</p>
+<main class="mosaico" id="mosaico">
+  <section class="losa l-tit" aria-labelledby="titulo">
+    <span class="etiqueta">Para autónomos y empleados en España</span>
+    <h1 id="titulo">Tus impuestos, <span>cuenta por cuenta.</span></h1>
+    <p>Recalcula tus impuestos desde tus facturas y nóminas, revisa lo que presenta tu gestoría y te avisa de lo que puedes ahorrar. Tus datos no salen de tu ordenador.</p>
+    <div class="fila-cta"><button class="boton" type="button" data-abrir="lista">Apúntate a la lista</button><button class="boton borde" type="button" data-abrir="demo">Ver la demo</button></div>
+  </section>
+
+  <div class="losa l-pan panel" role="button" tabindex="0" data-abrir="demo" data-flip-id="demo" aria-label="Abrir la demo del panel">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="etiqueta">Tu panel · pruébalo</span><span class="pastilla">datos de ejemplo</span></div>
+    <div class="preview" aria-hidden="true">
+      <div class="barra-v"><i></i><i></i><i></i><span style="margin-left:.4rem">panel.html</span></div>
+      <div class="lienzo">
+        <div class="mini ancho"><span class="etiqueta">Ejercicio 2026</span><b style="font:400 1.05rem var(--titulo)">Panel fiscal de Lucía</b><span style="color:var(--tinta-suave)">1 cosa vence esta semana · todo comprobado</span></div>
+        <div class="mini"><span class="etiqueta">Renta 2026</span><span class="rojo">≈ 640 €</span><div class="barrita"><span></span></div></div>
+        <div class="mini"><span class="etiqueta">Avisos</span><b>Seguro de salud</b><span style="color:var(--tinta-suave)">quedan 40 €</span></div>
+        <div class="mini ancho"><span class="etiqueta">Trimestres</span><div class="fila-plazo"><span>T1 · T2 · T3</span><span></span><span class="pastilla ok">Coinciden</span></div><div class="fila-plazo"><span class="num">1 feb</span><span>303 · 130 · 390</span><span class="pastilla">Gestoría</span></div></div>
       </div>
-
-      <figure class="abaco" aria-label="Ejemplo: ábaco compara los modelos del tercer trimestre con los presentados por la gestoría y la diferencia es cero">
-        <div class="abaco-cab"><span class="etiqueta">Tercer trimestre · ejemplo</span><span class="chip">Tu gestoría vs. ábaco</span></div>
-        <div class="fila">
-          <span class="modelo">303<small>IVA</small></span>
-          <div class="varilla"><div class="cuentas desliza" style="--desde: 42%"><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta gris"></i><i class="cuenta gris"></i></div></div>
-          <span class="resultado">0,00 €</span>
-        </div>
-        <div class="fila">
-          <span class="modelo">130<small>IRPF</small></span>
-          <div class="varilla"><div class="cuentas desliza" style="--desde: 28%"><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta gris"></i><i class="cuenta gris"></i><i class="cuenta gris"></i></div></div>
-          <span class="resultado">0,00 €</span>
-        </div>
-        <div class="fila">
-          <span class="modelo">349<small>UE</small></span>
-          <div class="varilla"><div class="cuentas desliza" style="--desde: 55%"><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta"></i><i class="cuenta gris"></i></div></div>
-          <span class="resultado">0,00 €</span>
-        </div>
-        <div class="abaco-pie"><span>29 facturas revisadas, una a una</span><span>Diferencia total <strong class="num">0,00 €</strong></span></div>
-      </figure>
-    </section>
-  </main>
-</div>
-
-<section class="banda" aria-labelledby="t-problema">
-  <div class="envoltura problema">
-    <div class="cabeza-seccion">
-      <span class="etiqueta">El problema</span>
-      <h2 id="t-problema">Pagas a una gestoría. ¿Sabes si lo hace bien?</h2>
-      <p class="entradilla">Firmas lo que te mandan cada trimestre. Si hay un error, la responsabilidad ante Hacienda es tuya, no de tu gestoría.</p>
-    </div>
-    <ul class="preguntas">
-      <li><span class="casilla">01</span><span>¿Me han deducido todas las facturas, o se les ha escapado alguna?</span></li>
-      <li><span class="casilla">02</span><span>¿Por qué este trimestre pago más que el anterior?</span></li>
-      <li><span class="casilla">03</span><span>¿Cuánto me va a salir la Renta? ¿Me estoy pasando de algún límite?</span></li>
-      <li><span class="casilla">04</span><span>¿Hay alguna deducción o ayuda para mí que nadie me ha contado?</span></li>
-      <li><span class="casilla">05</span><span>¿Qué vence este mes, y quién se encarga?</span></li>
-    </ul>
-  </div>
-</section>
-
-<section class="banda" id="como" aria-labelledby="t-como">
-  <div class="envoltura">
-    <div class="cabeza-seccion">
-      <span class="etiqueta">Cómo funciona</span>
-      <h2 id="t-como">Tú guardas las facturas. ábaco hace las cuentas.</h2>
-    </div>
-    <div class="pasos">
-      <div class="paso"><h3>Deja tus documentos en una carpeta</h3><p>Facturas, nóminas y lo que te envía tu gestoría. Sin plantillas ni formularios: los PDF tal cual.</p></div>
-      <div class="paso"><h3>Claude los lee, ábaco calcula</h3><p>Claude extrae los datos de cada factura. Un motor con las reglas fiscales recalcula el 303, el 130 y el 349: siempre igual y al céntimo.</p></div>
-      <div class="paso"><h3>Compara y te lo explica</h3><p>Casilla a casilla y factura a factura frente a lo presentado. Si algo no cuadra, te dice por qué y si merece la pena reclamarlo.</p></div>
+      <div class="velo"><span class="boton">Abrir la demo</span></div>
     </div>
   </div>
-</section>
 
-<section class="banda" id="panel" aria-labelledby="t-panel">
-  <div class="envoltura">
-    <div class="cabeza-seccion">
-      <span class="etiqueta">El panel</span>
-      <h2 id="t-panel">Todo tu año fiscal, en una página</h2>
-      <p class="entradilla">ábaco genera un panel que se abre en tu navegador y se actualiza solo cada semana. Este es real, con datos de ejemplo.</p>
-    </div>
-    <figure class="ventana" aria-label="Panel de ábaco con datos de ejemplo">
-      <div class="ventana-barra" aria-hidden="true"><i></i><i></i><i></i><span>panel.html · datos de ejemplo</span></div>
-      <div class="pv">
-        <div class="pv-cab">
-          <span class="etiqueta">Autónomo · ejercicio 2026</span>
-          <strong class="pv-titulo">Panel fiscal de Lucía</strong>
-          <p>1 cosa vence esta semana. Próxima declaración: T4 2026, el 1 feb 2027. Todos los trimestres comprobados.</p>
-        </div>
-        <div class="pv-rejilla">
-          <div class="pv-bloque">
-            <span class="pv-sub">Avisos</span>
-            <div class="pv-aviso alto"><b>Límite del seguro de salud</b><span>Solo puedes deducir 40 € más este año.</span></div>
-            <div class="pv-aviso medio"><b>Comprobar el cargo del 303</b><span>212,40 € el 20 oct · en 3 días</span></div>
-          </div>
-          <div class="pv-bloque">
-            <span class="pv-sub">Próximos plazos</span>
-            <div class="pv-fila hecho"><span class="num">20 oct</span><span>303 · 130 · 349 · T3</span><span class="chip ok">Presentado</span></div>
-            <div class="pv-fila"><span class="num">31 oct</span><span>Cambio de base del RETA</span><span class="chip alerta">Este mes</span></div>
-            <div class="pv-fila"><span class="num">1 feb</span><span>303 · 130 · 349 · 390 · T4</span><span class="chip">Gestoría</span></div>
-          </div>
-          <div class="pv-bloque ancho">
-            <span class="pv-sub">Declaraciones 2026</span>
-            <div class="pv-tabla">
-              <span class="pv-th">Trimestre</span><span class="pv-th n">IVA</span><span class="pv-th n">IRPF</span><span class="pv-th">Segundo check</span>
-              <span>T1</span><span class="num n">−35,10 €</span><span class="num n">96,00 €</span><span><span class="chip ok">Coincide</span></span>
-              <span>T2</span><span class="num n">640,25 €</span><span class="num n">210,50 €</span><span><span class="chip alerta">Explicadas</span></span>
-              <span>T3</span><span class="num n">212,40 €</span><span class="num n">0,00 €</span><span><span class="chip ok">Coincide</span></span>
-            </div>
-          </div>
-          <div class="pv-bloque">
-            <span class="pv-sub">Renta 2026 estimada</span>
-            <strong class="pv-grande">A pagar ≈ 640 €</strong>
-            <div class="barra" aria-hidden="true"><span style="width:98%"></span></div>
-            <span class="pv-nota">Base ≈ 24.550 € · a 450 € del límite del alquiler</span>
-          </div>
-          <div class="pv-bloque">
-            <span class="pv-sub">Ayudas</span>
-            <div class="pv-fila"><span>Deducción por alquiler</span><span class="chip ok">Cumples</span></div>
-            <div class="pv-fila"><span>Bono Alquiler Joven</span><span class="chip alerta">Posible</span></div>
-          </div>
-        </div>
-      </div>
-    </figure>
+  <button class="losa l-pro" type="button" data-abrir="problema" data-flip-id="problema"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">El problema</span><h2>¿Sabes si tu gestoría lo hace bien?</h2><p>5 preguntas que deberías poder responder.</p></button>
+  <button class="losa l-com" type="button" data-abrir="como" data-flip-id="como"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">Cómo funciona</span><h2>Carpeta, cálculo y comparación</h2><p>Claude lee, ábaco calcula al céntimo.</p></button>
+  <button class="losa l-aho" type="button" data-abrir="ahorro" data-flip-id="ahorro"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">Ahorro y ayudas</span><span class="cifra-grande">≈ 640 €</span><p>Tu Renta antes de tiempo (ejemplo).</p></button>
+  <button class="losa l-pri" type="button" data-abrir="privacidad" data-flip-id="privacidad"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">Privacidad</span><h2>Nada sale de tu ordenador</h2></button>
+  <button class="losa l-qui" type="button" data-abrir="quien" data-flip-id="quien"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">Quién y para quién</span><h2>Lo hice para mí</h2></button>
+  <button class="losa l-lis" type="button" data-abrir="lista" data-flip-id="lista"><span class="abrir" aria-hidden="true">+</span><span class="etiqueta">Lista de espera</span><h2>Quiero probarlo</h2><p>Te aviso cuando esté listo.</p></button>
+</main>
+<footer class="pie"><p>ábaco no es una gestoría ni asesoramiento fiscal profesional, y no presenta declaraciones.</p><p>Un proyecto de <a href="https://dgalodesign.com">D Galo Design</a> · <a href="privacidad.html">Privacidad</a></p></footer>
+<p class="pie-mini">No es asesoramiento fiscal · <a href="privacidad.html">Privacidad</a> · <a href="https://dgalodesign.com">D Galo Design</a></p>
+
+<!-- Contenido de las capas -->
+<template id="t-problema">
+  <span class="etiqueta">El problema</span>
+  <h2>Pagas a una gestoría. ¿Sabes si lo hace bien?</h2>
+  <p class="entradilla">Firmas lo que te mandan cada trimestre. Si hay un error, la responsabilidad ante Hacienda es tuya, no de tu gestoría.</p>
+  <ul class="preguntas">
+    <li><span class="casilla"><span>01</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Me han deducido todas las facturas, o se les ha escapado alguna?</span></li>
+    <li><span class="casilla"><span>02</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Por qué este trimestre pago más que el anterior?</span></li>
+    <li><span class="casilla"><span>03</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Cuánto me va a salir la Renta? ¿Me estoy pasando de algún límite?</span></li>
+    <li><span class="casilla"><span>04</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Hay alguna deducción o ayuda para mí que nadie me ha contado?</span></li>
+    <li><span class="casilla"><span>05</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Qué vence este mes, y quién se encarga?</span></li>
+  </ul>
+</template>
+<template id="t-como">
+  <span class="etiqueta">Cómo funciona</span>
+  <h2>Tú guardas los documentos. ábaco hace las cuentas.</h2>
+  <div class="rejilla">
+    <div class="ficha"><span class="pastilla">Paso 1</span><h3>Deja tus documentos en una carpeta</h3><p>Facturas, nóminas y lo que te envía tu gestoría. Los PDF tal cual, sin plantillas.</p></div>
+    <div class="ficha"><span class="pastilla">Paso 2</span><h3>Claude los lee, ábaco calcula</h3><p>Claude extrae los datos y un motor con las reglas fiscales recalcula el 303, el 130 y el 349, y tu Renta: siempre igual y al céntimo.</p></div>
+    <div class="ficha"><span class="pastilla">Paso 3</span><h3>Compara y te lo explica</h3><p>Casilla a casilla frente a lo presentado. Si algo no cuadra, te dice por qué y si merece la pena reclamarlo.</p></div>
   </div>
-</section>
-
-<section class="banda" aria-labelledby="t-mas">
-  <div class="envoltura">
-    <div class="cabeza-seccion">
-      <span class="etiqueta">Más que revisar</span>
-      <h2 id="t-mas">Todo lo que tu gestoría no te cuenta</h2>
-      <p class="entradilla">Todas las cifras de esta página son de ejemplo.</p>
-    </div>
-    <div class="funciones">
-      <article class="funcion">
-        <h3>Tu Renta, antes de tiempo</h3>
-        <p>Con tus nóminas y tu actividad, ábaco estima la Renta del año y te dice cuánto retener para no llevarte un susto en junio.</p>
-        <div class="ejemplo"><div class="linea-ej"><span>Renta estimada</span><span class="num">≈ 640 € a pagar</span></div><div class="linea-ej"><span>Retención en nómina para cubrirla</span><span class="num">8 % → 11,5 %</span></div></div>
-      </article>
-      <article class="funcion">
-        <h3>Límites que cuestan dinero</h3>
-        <p>Muchas deducciones se pierden por pasarte unos euros de un límite. ábaco te avisa antes de que pase.</p>
-        <div class="ejemplo"><div class="linea-ej"><span>Deducción del alquiler (600 €)</span><span class="chip alerta">a 450 € del límite</span></div><div class="barra" aria-hidden="true"><span></span></div></div>
-      </article>
-      <article class="funcion">
-        <h3>Ayudas que encajan contigo</h3>
-        <p>Cruza tu perfil con ayudas y deducciones vigentes, siempre con su fuente oficial, y vigila cuándo abren.</p>
-        <div class="ejemplo"><div class="linea-ej"><span>Bono Alquiler Joven</span><span class="chip ok">hasta 6.000 €</span></div><div class="linea-ej"><span>Deducción por compra de vivienda</span><span class="chip">al comprar</span></div></div>
-      </article>
-      <article class="funcion">
-        <h3>Plazos y avisos</h3>
-        <p>Un panel con lo que vence, quién se encarga y lo que ya está presentado. Te avisa una semana antes.</p>
-        <div class="ejemplo"><div class="linea-ej"><span>303 · 130 · 349 · 390</span><span class="num">1 feb</span></div><div class="linea-ej"><span>Límite del seguro de salud</span><span class="chip alerta">quedan 40 €</span></div></div>
-      </article>
+</template>
+<template id="t-ahorro">
+  <span class="etiqueta">Ahorro y ayudas</span>
+  <h2>Todo lo que tu gestoría no te cuenta</h2>
+  <p class="entradilla">Cifras de ejemplo.</p>
+  <div class="rejilla">
+    <div class="ficha"><h3>Tu Renta, antes de tiempo</h3><p>Con tus nóminas y tu actividad, estima la Renta del año y te dice cuánto retener para no llevarte un susto en junio.</p><div class="ejemplo"><div class="linea-ej"><span>Renta estimada</span><span class="num">≈ 640 € a pagar</span></div><div class="linea-ej"><span>Retención para cubrirla</span><span class="num">8 % → 11,5 %</span></div></div></div>
+    <div class="ficha"><h3>Límites que cuestan dinero</h3><p>Muchas deducciones se pierden por pasarte unos euros de un límite. ábaco te avisa antes.</p><div class="ejemplo"><div class="linea-ej"><span>Deducción del alquiler (600 €)</span><span class="pastilla alerta">a 450 € del límite</span></div><div class="barrita" style="--lleno:98%"><span></span></div></div></div>
+    <div class="ficha"><h3>Ayudas que encajan contigo</h3><p>Cruza tu perfil con ayudas y deducciones vigentes, siempre con su fuente oficial.</p><div class="ejemplo"><div class="linea-ej"><span>Bono Alquiler Joven</span><span class="pastilla ok">hasta 6.000 €</span></div><div class="linea-ej"><span>Deducción por compra de vivienda</span><span class="pastilla">al comprar</span></div></div></div>
+    <div class="ficha"><h3>Plazos y avisos</h3><p>Lo que vence, quién se encarga y lo que ya está presentado. Te avisa una semana antes.</p><div class="ejemplo"><div class="linea-ej"><span>303 · 130 · 349 · 390</span><span class="num">1 feb</span></div><div class="linea-ej"><span>Límite del seguro de salud</span><span class="pastilla alerta">quedan 40 €</span></div></div></div>
+  </div>
+</template>
+<template id="t-privacidad">
+  <span class="etiqueta">Privacidad</span>
+  <h2>Tus impuestos no salen de tu ordenador.</h2>
+  <p class="entradilla">ábaco no es una web donde subes tus facturas. Es un motor que corre en tu ordenador junto a Claude, y solo lee y escribe en tu carpeta.</p>
+  <ul class="lista"><li>Sin cuentas ni servidores con tus datos fiscales.</li><li>Normativa validada con fuentes oficiales (BOE, Agencia Tributaria, Seguridad Social), con el enlace a cada una.</li><li>Funciona con Claude y está preparado para otros asistentes de IA.</li></ul>
+  <p><a href="privacidad.html">Cómo trato los datos de esta web</a></p>
+</template>
+<template id="t-quien">
+  <span class="etiqueta">Quién está detrás</span>
+  <h2>Lo hice para mí</h2>
+  <p class="entradilla">Soy Edgar, diseñador UX/UI y autónomo. Cada trimestre firmaba lo que me mandaba mi gestoría sin entender del todo qué estaba firmando, y la Renta siempre llegaba con sorpresa. Así que construí ábaco con Claude para revisar mis propios impuestos. La primera comprobación cuadró al céntimo, y por el camino encontró un límite de deducción que estaba a punto de perder.</p>
+  <div class="rejilla">
+    <div class="ficha"><h3>Para quién es</h3><ul class="lista"><li>Autónomos en estimación directa con IVA general (303, 130, 349).</li><li>Empleados por cuenta ajena: tu Renta, retenciones, deducciones y ayudas.</li><li>Las dos cosas a la vez.</li><li>Comunidades autónomas: empezamos por Andalucía.</li><li>Necesitas un ordenador y una suscripción de pago a Claude.</li></ul><ul class="lista no"><li>Todavía no: módulos, recargo de equivalencia ni sociedades.</li></ul></div>
+    <div class="ficha"><h3>Hacia dónde va</h3><ul class="lista"><li><b>Hoy.</b> Revisar trimestres, estimar la Renta, avisos, ahorro y ayudas.</li><li><b>Siguiente.</b> Más comunidades autónomas y la Renta completa.</li><li><b>Después.</b> Preparar tus modelos para que los presentes tú.</li></ul></div>
+  </div>
+  <p><a href="https://dgalodesign.com">Mi portfolio</a></p>
+</template>
+<template id="t-lista">
+  <span class="etiqueta">Lista de espera</span>
+  <h2>Que tus impuestos cuadren. Siempre.</h2>
+  <p class="entradilla">ábaco está en pruebas. Escríbeme y te aviso cuando puedas usarlo.</p>
+  <div><a class="boton" href="mailto:dgalodesign@gmail.com?subject=Quiero%20probar%20%C3%A1baco">Quiero probar ábaco</a></div>
+  <p class="correo">Solo uso tu email para responderte y avisarte. <a href="privacidad.html">Cómo trato tus datos</a>.</p>
+  <p class="correo">O escribe a <code data-direccion>dgalodesign@gmail.com</code> <button class="copiar" type="button">Copiar</button></p>
+</template>
+<template id="t-demo">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <div style="display:grid;gap:.4rem"><span class="etiqueta">Demo del panel · datos de ejemplo</span><h2 data-demo="titulo">Panel fiscal de Lucía</h2></div>
+    <div class="selector-perfil" role="group" aria-label="Tipo de actividad">
+      <button type="button" data-perfil="autonomo">Autónomo</button>
+      <button type="button" data-perfil="empleado">Empleado</button>
+      <button type="button" data-perfil="ambos">Ambos</button>
     </div>
   </div>
-</section>
+  <p class="demo-resumen" data-demo="resumen" aria-live="polite"></p>
+  <div class="demo" data-demo="rejilla"></div>
+</template>
 
-<section class="banda" id="privacidad" aria-labelledby="t-priv">
-  <div class="envoltura">
-    <div class="privacidad">
-      <div style="display:grid;gap:1rem">
-        <span class="etiqueta" style="color:inherit;opacity:.7">Privacidad</span>
-        <h2 id="t-priv">Tus impuestos no salen de tu ordenador.</h2>
-        <p>ábaco no es una web donde subes tus facturas. Es un motor que corre en tu ordenador junto a Claude, y solo lee y escribe en tu carpeta.</p>
-      </div>
-      <ul>
-        <li><span>Sin cuentas ni servidores con tus datos fiscales.</span></li>
-        <li><span>Normativa validada con fuentes oficiales (BOE, Agencia Tributaria, Seguridad Social), con el enlace a cada una.</span></li>
-        <li><span>Funciona con Claude y está preparado para otros asistentes de IA.</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="banda" aria-labelledby="t-quien">
-  <div class="envoltura dos">
-    <div>
-      <span class="etiqueta">Para quién es</span>
-      <h2 id="t-quien" style="margin-top:1rem">Autónomos que quieren entender sus números</h2>
-      <ul class="lista">
-        <li>Estimación directa con IVA general (303, 130, 349).</li>
-        <li>Tienes gestoría o una app de impuestos y quieres revisar lo que presenta.</li>
-        <li>También si además trabajas por cuenta ajena.</li>
-        <li>Comunidades autónomas: empezamos por Andalucía.</li>
-        <li>Necesitas un ordenador y una suscripción de pago a Claude.</li>
-      </ul>
-      <ul class="lista no">
-        <li>Todavía no: módulos, recargo de equivalencia ni sociedades.</li>
-      </ul>
-    </div>
-    <div>
-      <span class="etiqueta">Hacia dónde va</span>
-      <h2 style="margin-top:1rem">De revisar a llevarlo tú</h2>
-      <ol class="rumbo">
-        <li class="hoy"><span class="cuando">Hoy</span><span>Revisar trimestres, estimar la Renta, avisos, ahorro y ayudas.</span></li>
-        <li><span class="cuando">Siguiente</span><span>Más comunidades autónomas y la Renta completa.</span></li>
-        <li><span class="cuando">Después</span><span>Preparar tus modelos para que los presentes tú, sin depender de nadie.</span></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<section class="banda" id="autor" aria-labelledby="t-autor">
-  <div class="envoltura autor">
-    <div class="autor-marca" aria-hidden="true">
-      <svg viewBox="0 0 120 120"><rect width="120" height="120" rx="24" fill="var(--cobalto-claro)"/><path d="M18 40h84M18 60h84M18 80h84" stroke="var(--varilla)" stroke-width="2"/><circle cx="36" cy="40" r="8" fill="var(--ambar)"/><circle cx="54" cy="40" r="8" fill="var(--ambar)"/><circle cx="74" cy="60" r="8" fill="var(--ambar)"/><circle cx="46" cy="80" r="8" fill="var(--ambar)"/><circle cx="64" cy="80" r="8" fill="var(--ambar)"/><circle cx="82" cy="80" r="8" fill="var(--ambar)"/></svg>
-    </div>
-    <div class="autor-texto">
-      <span class="etiqueta">Quién está detrás</span>
-      <h2 id="t-autor">Lo hice para mí</h2>
-      <p>Soy Edgar, diseñador UX/UI y autónomo. Cada trimestre firmaba lo que me mandaba mi gestoría sin entender del todo qué estaba firmando, y la Renta siempre llegaba con sorpresa.</p>
-      <p>Así que construí ábaco con Claude para revisar mis propios impuestos. La primera comprobación cuadró al céntimo, y por el camino encontró un límite de deducción que estaba a punto de perder. Ahora sigo con él mis impuestos y quiero saber si a otros autónomos también les sirve.</p>
-      <p><a href="https://dgalodesign.com">Mi portfolio</a></p>
-    </div>
-  </div>
-</section>
-
-<section class="banda" id="lista" aria-labelledby="t-lista">
-  <div class="envoltura cierre">
-    <span class="etiqueta">Lista de espera</span>
-    <h2 id="t-lista">Que tus impuestos cuadren. Siempre.</h2>
-    <p class="entradilla">ábaco está en pruebas. Escríbeme y te aviso cuando puedas usarlo.</p>
-    <a class="boton" id="enlace-correo" href="mailto:dgalodesign@gmail.com?subject=Quiero%20probar%20%C3%A1baco&amp;body=Hola%2C%20soy%20aut%C3%B3nomo%2Fa%20y%20me%20gustar%C3%ADa%20probar%20%C3%A1baco.%0A%0AA%20qu%C3%A9%20me%20dedico%3A%20%0AComunidad%20aut%C3%B3noma%3A%20%0A%C2%BFTengo%20gestor%C3%ADa%3F%20">Quiero probar ábaco</a>
-    <p class="correo">Solo uso tu email para responderte y avisarte. <a href="privacidad.html">Cómo trato tus datos</a>.</p>
-    <p class="correo">O escribe a <code id="direccion">dgalodesign@gmail.com</code> <button class="copiar" id="copiar" type="button">Copiar</button></p>
-  </div>
-</section>
-
-<div class="envoltura">
-  <footer>
-    <p>ábaco no es una gestoría ni asesoramiento fiscal profesional, y no presenta declaraciones. Te ayuda a revisar tus números y a preguntar mejor.</p>
-    <p>Un proyecto de <a href="https://dgalodesign.com">D Galo Design</a> · <a href="privacidad.html">Privacidad</a></p>
-  </footer>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
 <script>
-// Copiar la dirección de correo (el enlace mailto no funciona en todos los navegadores)
-document.getElementById('copiar').addEventListener('click', function () {
-  var boton = this, texto = document.getElementById('direccion').textContent;
-  var hecho = function () { boton.textContent = 'Copiado'; setTimeout(function () { boton.textContent = 'Copiar'; }, 1800); };
-  if (navigator.clipboard) navigator.clipboard.writeText(texto).then(hecho, function () { window.getSelection().selectAllChildren(document.getElementById('direccion')); });
-  else window.getSelection().selectAllChildren(document.getElementById('direccion'));
-});
+(function () {
+  'use strict';
+  var raiz = document.documentElement;
+  var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hayGsap = typeof window.gsap !== 'undefined';
+  if (hayGsap && window.Flip) gsap.registerPlugin(Flip);
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var leer = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var guardar = function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } };
+  var eur0 = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+  /* ---------- Modo claro / oscuro ---------- */
+  var botonTema = $('#tema');
+  var SOL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var LUNA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>';
+  function oscuroAhora() { var t = raiz.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  function pintarTema() { var o = oscuroAhora(); botonTema.innerHTML = o ? SOL : LUNA; botonTema.setAttribute('aria-label', o ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'); $('meta[name="theme-color"]').setAttribute('content', o ? '#0f1a16' : '#eef3ea'); }
+  var guardado = leer('abaco-tema'); if (guardado === 'dark' || guardado === 'light') raiz.setAttribute('data-theme', guardado);
+  botonTema.addEventListener('click', function () { var nuevo = oscuroAhora() ? 'light' : 'dark'; raiz.setAttribute('data-theme', nuevo); guardar('abaco-tema', nuevo); pintarTema(); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintarTema);
+  pintarTema();
+
+  /* ---------- Retícula de renglones: 4 × 3 sin scroll si cabe; si no, columna con scroll ---------- */
+  var R = 32, CAB = 2 * R, MIN_FILA = 6 * R;
+  function maquetar() {
+    var lineas = Math.floor((innerHeight - CAB - 2 * R) / R);   // renglones útiles bajo la cabecera, con un renglón arriba y otro abajo
+    var porFila = Math.floor((lineas - 2) / 3);                  // tres filas y dos huecos de un renglón
+    var cabe = innerWidth >= 1024 && porFila * R >= MIN_FILA;
+    raiz.classList.toggle('sin-scroll', cabe);
+    raiz.classList.toggle('con-scroll', !cabe);
+    raiz.classList.toggle('fila-baja', cabe && porFila < 8); // filas de 6–7 renglones: el titular se queda en lo esencial
+    raiz.style.setProperty('--fila', cabe ? porFila * R + 'px' : 'auto');
+    raiz.style.setProperty('--fila-px', (cabe ? porFila * R : 320) + 'px');
+    raiz.style.setProperty('--hueco', R + 'px');
+  }
+  maquetar();
+  addEventListener('resize', maquetar);
+
+  /* Entrada del mosaico */
+  if (hayGsap && !quieto) gsap.from('.losa', { y: 28, duration: .7, ease: 'power3.out', stagger: .06, clearProps: 'transform' }); // solo desplazamiento: visibles aunque la animación no corra
+
+  /* ---------- Capas de detalle ---------- */
+  var abierta = null;
+  function abrir(id, desde) {
+    if (abierta) return;
+    var tpl = document.getElementById('t-' + id);
+    if (!tpl) return;
+    var fondo = document.createElement('div'); fondo.className = 'fondo-capa';
+    var capa = document.createElement('div'); capa.className = 'capa'; capa.setAttribute('role', 'dialog'); capa.setAttribute('aria-modal', 'true'); capa.setAttribute('aria-label', id === 'demo' ? 'Demo del panel' : (tpl.content.querySelector('h2') || {}).textContent || 'Detalle');
+    capa.innerHTML = '<div class="capa-cab"><span class="etiqueta">ábaco</span><button class="cerrar" type="button" aria-label="Cerrar">✕</button></div><div class="capa-cuerpo"></div>';
+    var cuerpo = $('.capa-cuerpo', capa);
+    cuerpo.appendChild(tpl.content.cloneNode(true));
+    var estado = desde && hayGsap && window.Flip && !quieto ? Flip.getState(desde) : null;
+    document.body.appendChild(fondo); document.body.appendChild(capa);
+    raiz.style.overflow = 'hidden';
+    abierta = { capa: capa, fondo: fondo, desde: desde };
+    if (estado) { capa.setAttribute('data-flip-id', desde.getAttribute('data-flip-id')); Flip.from(estado, { targets: capa, duration: .6, ease: 'power3.inOut', absolute: true, scale: true, fade: true }); gsap.from(fondo, { autoAlpha: 0, duration: .35 }); }
+    if (hayGsap && !quieto) gsap.from(cuerpo.children, { y: 18, autoAlpha: 0, duration: .5, ease: 'power3.out', stagger: .06, delay: estado ? .35 : 0 });
+    $$('.preguntas li', capa).forEach(function (li, i) { setTimeout(function () { li.classList.add('marcada'); }, quieto ? 0 : 600 + i * 220); });
+    $$('.copiar', capa).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var d = $('[data-direccion]', b.parentNode);
+        var listo = function () { b.textContent = 'Copiado ✓'; setTimeout(function () { b.textContent = 'Copiar'; }, 1800); };
+        if (navigator.clipboard) navigator.clipboard.writeText(d.textContent).then(listo, function () { getSelection().selectAllChildren(d); }); else getSelection().selectAllChildren(d);
+      });
+    });
+    if (id === 'demo') iniciarDemo(capa);
+    $('.cerrar', capa).addEventListener('click', cerrar);
+    fondo.addEventListener('click', cerrar);
+    $('.cerrar', capa).focus();
+  }
+  function cerrar() {
+    if (!abierta) return;
+    var a = abierta; abierta = null;
+    var hecho = false;
+    var fin = function () { if (hecho) return; hecho = true; a.capa.remove(); a.fondo.remove(); raiz.style.overflow = ''; if (a.desde) a.desde.focus(); };
+    setTimeout(fin, 350); // por si la animación no llega a terminar (pestaña en segundo plano)
+    if (hayGsap && !quieto) { gsap.to(a.capa, { autoAlpha: 0, y: 12, duration: .22, ease: 'power2.in', onComplete: fin }); gsap.to(a.fondo, { autoAlpha: 0, duration: .22 }); } else fin();
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-abrir]');
+    if (!b || abierta) return;
+    var id = b.getAttribute('data-abrir');
+    abrir(id, $('[data-flip-id="' + id + '"]') || b);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') cerrar();
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.l-pan')) { e.preventDefault(); abrir('demo', e.target); }
+    if (e.key === 'Tab' && abierta) { // mantener el foco dentro de la capa
+      var f = $$('button, a[href], [tabindex]:not([tabindex="-1"])', abierta.capa);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  /* ---------- Demo del panel: Autónomo / Empleado / Ambos (datos de ejemplo) ---------- */
+  var PERFILES = {
+    autonomo: {
+      titulo: 'Panel fiscal de Lucía · autónoma',
+      resumen: 'Nada vence esta semana. Próxima declaración: T4, el 1 de febrero. Los tres trimestres coinciden con tu gestoría.',
+      avisos: [['alto', 'Límite del seguro de salud', 'Solo puedes deducir 40 € más este año.'], ['', 'Cargo del 303 del T3', '212,40 € el 20 de octubre']],
+      plazos: [['hecho', '20 oct', '303 · 130 · 349 · T3', 'ok', 'Presentado'], ['', '31 oct', 'Cambio de base del RETA', 'alerta', 'Este mes'], ['', '1 feb', '303 · 130 · 349 · 390 · T4', '', 'Gestoría'], ['', '30 jun', 'Renta 2026', '', 'Tú']],
+      trimestres: [['T1', '−35,10 €', '96,00 €', 'ok', 'Coincide'], ['T2', '640,25 €', '210,50 €', 'alerta', 'Explicadas'], ['T3', '212,40 €', '0,00 €', 'ok', 'Coincide']],
+      renta: { importe: 520, signo: 'pagar', nota: 'Solo actividad: rendimiento ≈ 11.900 €. Has adelantado 1.310 € en pagos del 130 y retenciones.' },
+      limite: { margen: 13100, lleno: 48, texto: 'Base ≈ 11.900 € · lejos del límite de 25.000 € del alquiler' },
+      ayudas: [['Deducción por alquiler', 'ok', 'Cumples'], ['Bono Alquiler Joven', 'alerta', 'Posible'], ['Minoración del 130 en 2027', 'ok', '100 €/trimestre']],
+      cifras: [['Ingresos del año', '14.200 €'], ['Gastos deducibles', '2.300 €'], ['Ingresado a Hacienda', '1.540 €']],
+    },
+    empleado: {
+      titulo: 'Panel fiscal de Lucía · empleada',
+      resumen: 'Solo tienes un plazo: la Renta 2026, del 2 de abril al 30 de junio. Con tu retención actual saldrá a devolver.',
+      avisos: [['', 'Revisa tu retención', 'Con un 13 % te devuelven unos 310 €. Podrías bajarla un punto y cobrar más cada mes.'], ['', 'Guarda los recibos del alquiler', 'Los necesitarás para la deducción autonómica.']],
+      plazos: [['', '30 jun', 'Renta 2026', '', 'Tú']],
+      trimestres: null,
+      renta: { importe: 310, signo: 'cobrar', nota: 'Nómina de 23.400 € brutos con un 13 % de retención. Incluye la deducción del alquiler.' },
+      limite: { margen: 3600, lleno: 86, texto: 'Base ≈ 21.400 € · a 3.600 € del límite del alquiler' },
+      ayudas: [['Deducción por alquiler', 'ok', 'Cumples'], ['Bono Alquiler Joven', 'alerta', 'Posible'], ['Plan de pensiones', '', 'Ahorra hasta 450 €']],
+      cifras: [['Sueldo bruto', '23.400 €'], ['Retenido en nómina', '3.040 €'], ['Seguridad Social', '1.490 €']],
+    },
+    ambos: {
+      titulo: 'Panel fiscal de Lucía · nómina y actividad',
+      resumen: '1 cosa vence esta semana. Próxima declaración: T4, el 1 de febrero. Ojo: estás a 450 € de perder la deducción del alquiler.',
+      avisos: [['alto', 'A 450 € del límite del alquiler', 'Si facturas más de lo previsto, pierdes 600 € de deducción.'], ['alto', 'Límite del seguro de salud', 'Solo puedes deducir 40 € más este año.'], ['', 'Retención en nómina', 'Súbela al 11,5 % para no pagar la Renta de golpe.']],
+      plazos: [['hecho', '20 oct', '303 · 130 · 349 · T3', 'ok', 'Presentado'], ['', '1 feb', '303 · 130 · 349 · 390 · T4', '', 'Gestoría'], ['', '30 jun', 'Renta 2026', '', 'Tú']],
+      trimestres: [['T1', '−35,10 €', '96,00 €', 'ok', 'Coincide'], ['T2', '640,25 €', '210,50 €', 'alerta', 'Explicadas'], ['T3', '212,40 €', '0,00 €', 'ok', 'Coincide']],
+      renta: { importe: 640, signo: 'pagar', nota: 'Nómina (16.400 € netos) + actividad (8.150 €). La retención del 8 % no cubre la actividad.' },
+      limite: { margen: 450, lleno: 98, texto: 'Base ≈ 24.550 € · a 450 € del límite del alquiler' },
+      ayudas: [['Deducción por alquiler', 'alerta', 'En riesgo'], ['Bono Alquiler Joven', 'alerta', 'Posible'], ['Plan de pensiones', '', 'Ahorra hasta 450 €']],
+      cifras: [['Ingresos de la actividad', '10.780 €'], ['Sueldo bruto', '19.650 €'], ['Ingresado a Hacienda', '1.400 €']],
+    },
+  };
+  function html(p) {
+    var b = [];
+    b.push('<div class="bloque"><span class="etiqueta">Avisos</span>' + p.avisos.map(function (a) { return '<div class="aviso ' + a[0] + '"><b>' + a[1] + '</b><span>' + a[2] + '</span></div>'; }).join('') + '</div>');
+    b.push('<div class="bloque"><span class="etiqueta">Renta 2026 estimada</span><span class="grande ' + p.renta.signo + '" data-cuenta="' + p.renta.importe + '" data-prefijo="' + (p.renta.signo === 'pagar' ? 'A pagar ≈ ' : 'A devolver ≈ ') + '">' + (p.renta.signo === 'pagar' ? 'A pagar ≈ ' : 'A devolver ≈ ') + eur0.format(p.renta.importe) + '</span><span class="nota">' + p.renta.nota + '</span><div class="barrita" style="--lleno:' + p.limite.lleno + '%"><span></span></div><span class="nota">' + p.limite.texto + '</span></div>');
+    b.push('<div class="bloque"><span class="etiqueta">Próximos plazos</span>' + p.plazos.map(function (x) { return '<div class="fila-plazo ' + x[0] + '"><span class="num">' + x[1] + '</span><span>' + x[2] + '</span><span class="pastilla ' + x[3] + '">' + x[4] + '</span></div>'; }).join('') + '</div>');
+    if (p.trimestres) b.push('<div class="bloque ancho"><span class="etiqueta">Declaraciones 2026 · segundo check</span><div class="tabla"><span class="th">Trimestre</span><span class="th n">IVA (303)</span><span class="th n">IRPF (130)</span><span class="th">Gestoría</span>' + p.trimestres.map(function (t) { return '<span>' + t[0] + '</span><span class="n">' + t[1] + '</span><span class="n">' + t[2] + '</span><span><span class="pastilla ' + t[3] + '">' + t[4] + '</span></span>'; }).join('') + '</div></div>');
+    b.push('<div class="bloque' + (p.trimestres ? '' : ' ancho') + '"><span class="etiqueta">Ayudas y deducciones</span>' + p.ayudas.map(function (a) { return '<div class="fila-plazo"><span></span><span>' + a[0] + '</span><span class="pastilla ' + a[1] + '">' + a[2] + '</span></div>'; }).join('') + '</div>');
+    b.push('<div class="bloque' + (p.trimestres ? ' todo' : '') + '"><span class="etiqueta">El año en cifras</span><div class="rejilla" style="grid-template-columns:repeat(auto-fit,minmax(9rem,1fr))">' + p.cifras.map(function (c) { return '<div><span class="nota">' + c[0] + '</span><div class="num" style="font-size:1.3rem;font-weight:700">' + c[1] + '</div></div>'; }).join('') + '</div></div>');
+    return b.join('');
+  }
+  function iniciarDemo(capa) {
+    var botones = $$('[data-perfil]', capa), rejilla = $('[data-demo="rejilla"]', capa);
+    function poner(id) {
+      var p = PERFILES[id];
+      botones.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.perfil === id)); });
+      guardar('abaco-perfil-demo', id);
+      var cambiar = function () {
+        $('[data-demo="titulo"]', capa).textContent = p.titulo;
+        $('[data-demo="resumen"]', capa).textContent = p.resumen;
+        rejilla.innerHTML = html(p);
+        if (!hayGsap || quieto) return;
+        gsap.from(rejilla.children, { y: 16, autoAlpha: 0, duration: .45, ease: 'power3.out', stagger: .06 });
+        $$('.barrita span', rejilla).forEach(function (s) { gsap.fromTo(s, { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: 'power2.out', delay: .2 }); });
+        $$('[data-cuenta]', rejilla).forEach(function (n) { var fin = +n.dataset.cuenta, pre = n.dataset.prefijo, o = { v: 0 }; gsap.to(o, { v: fin, duration: 1, ease: 'power2.out', onUpdate: function () { n.textContent = pre + eur0.format(Math.round(o.v)); } }); });
+      };
+      if (hayGsap && !quieto && rejilla.children.length) gsap.to(rejilla.children, { autoAlpha: 0, y: -8, duration: .18, stagger: .02, onComplete: cambiar });
+      else cambiar();
+    }
+    botones.forEach(function (b) { b.addEventListener('click', function () { poner(b.dataset.perfil); }); });
+    var inicial = leer('abaco-perfil-demo');
+    poner(PERFILES[inicial] ? inicial : 'ambos');
+  }
+})();
 </script>
 </body>
 </html>
