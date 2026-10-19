@@ -110,3 +110,7 @@ node scripts/probar-mcp.mjs
 - `src/mcp.ts`: servidor MCP. `npm run build:plugin` lo empaqueta en `plugin/server/`.
 
 Los parámetros fiscales están validados con el Manual práctico de Renta 2025 de la AEAT. Revísalos cada año.
+
+## Licencia
+
+[MIT](LICENSE) © 2026 Edgar D Galo. Ábaco no es asesoramiento fiscal profesional: úsalo bajo tu responsabilidad y consulta las dudas de criterio con tu gestoría.
