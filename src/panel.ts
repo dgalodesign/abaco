@@ -111,7 +111,7 @@ export async function generarPanel(base: string, ejercicio: number, hoy: string)
   const previsiones = [...seg.previsiones];
   if (analisis) {
     const r = analisis.renta.resultado;
-    previsiones.unshift({ concepto: `Renta ${ejercicio}`, importe: Math.abs(r), signo: r > 0 ? 'pagar' : 'cobrar', cuando: `abril–junio de ${ejercicio + 1}`, nota: 'Estimación de autogestor: detalle en «Renta y ahorro».' });
+    previsiones.unshift({ concepto: `Renta ${ejercicio}`, importe: Math.abs(r), signo: r > 0 ? 'pagar' : 'cobrar', cuando: `abril–junio de ${ejercicio + 1}`, nota: 'Estimación de ábaco: detalle en «Renta y ahorro».' });
   }
   const datos = {
     trimestres, cifras, plazos, avisos, previsiones,

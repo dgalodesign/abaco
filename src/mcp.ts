@@ -1,5 +1,5 @@
 /**
- * Servidor MCP de autogestor: expone el motor (comparar trimestres, panel, Renta, ayudas) a cualquier IA
+ * Servidor MCP de ábaco: expone el motor (comparar trimestres, panel, Renta, ayudas) a cualquier IA
  * compatible con MCP. La carpeta del autónomo llega en AUTOGESTOR_DIR; nada sale del ordenador.
  */
 import fs from 'node:fs';
@@ -47,7 +47,7 @@ const año = z.number().int().min(2020).max(2100).describe('Ejercicio, p. ej. 20
 const trimestre = z.number().int().min(1).max(4).describe('Trimestre: 1, 2, 3 o 4');
 
 export function crearServidor(): McpServer {
-  const s = new McpServer({ name: 'autogestor', version: VERSION });
+  const s = new McpServer({ name: 'abaco', version: VERSION });
 
   s.registerTool(
     'estructura_carpeta',

@@ -3,7 +3,7 @@ import type { Comparacion, FilaCasilla } from './comparar.js';
 const eur = (n?: number) => (n === undefined ? '—' : n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
 function tabla(filas: FilaCasilla[]) {
-  const l = ['| Casilla | Gestoría | Autogestor | Diferencia |', '|---|--:|--:|--:|'];
+  const l = ['| Casilla | Gestoría | ábaco | Diferencia |', '|---|--:|--:|--:|'];
   for (const f of filas) {
     const marca = f.dif === 0 ? '' : f.informativa ? ' (informativa)' : f.redondeo ? ' (redondeo)' : ' **⚠**';
     l.push(`| ${f.casilla} | ${eur(f.gestor)} | ${eur(f.propio)} | ${f.dif === 0 ? '0' : eur(f.dif)}${marca} |`);
@@ -16,7 +16,7 @@ const veredicto = (filas: FilaCasilla[]) => (filas.some((f) => !f.informativa &&
 export function informeMarkdown(c: Comparacion): string {
   const out: string[] = [];
   const T = `T${c.trimestre} ${c.ejercicio}`;
-  out.push(`# Comprobación ${T}`, '', `Generado el ${new Date().toLocaleDateString('es-ES')} por autogestor. Compara lo presentado por la gestoría con un cálculo propio hecho desde las facturas.`, '');
+  out.push(`# Comprobación ${T}`, '', `Generado el ${new Date().toLocaleDateString('es-ES')} por ábaco. Compara lo presentado por la gestoría con un cálculo propio hecho desde las facturas.`, '');
 
   out.push('## Resumen', '');
   if (c.m303) out.push(`- **303:** ${veredicto(c.m303.filas)} (justificante ${c.m303.decl.justificante ?? 'no presentado'})`);
@@ -48,7 +48,7 @@ export function informeMarkdown(c: Comparacion): string {
       out.push('');
     }
     if (c.libro.diferencias.length) {
-      out.push('| Factura | Proveedor/cliente | Campo | Gestoría | Autogestor |', '|---|---|---|--:|--:|');
+      out.push('| Factura | Proveedor/cliente | Campo | Gestoría | ábaco |', '|---|---|---|--:|--:|');
       for (const d of c.libro.diferencias) out.push(`| ${d.numero} | ${d.contraparte} | ${d.campo} | ${d.gestor} | ${d.propio} |`);
     }
     if (!c.libro.soloGestor.length && !c.libro.soloPropio.length && !c.libro.diferencias.length) out.push('Todas las facturas coinciden.');

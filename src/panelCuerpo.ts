@@ -207,7 +207,7 @@ export function cuerpo(d: Record<string, unknown[]>, meta: MetaPanel): string {
     <div class="prev">${htmlPrev}</div>
   </section>
 
-  <footer>Generado el ${fecha(hoy)} por autogestor a partir de ${actividad ? 'tus facturas, los modelos presentados por la gestoría y ESTADO.md' : 'tus nóminas y tu perfil'}. Las fechas de plazo son las generales: confírmalas con el calendario del contribuyente de la AEAT. Estimaciones, no asesoramiento vinculante.</footer>
+  <footer>Generado el ${fecha(hoy)} por ábaco a partir de ${actividad ? 'tus facturas, los modelos presentados por la gestoría y ESTADO.md' : 'tus nóminas y tu perfil'}. Las fechas de plazo son las generales: confírmalas con el calendario del contribuyente de la AEAT. Estimaciones, no asesoramiento vinculante.</footer>
 </main>
 <script>
 // Recalcula las cuentas atrás al día en que se abre el panel

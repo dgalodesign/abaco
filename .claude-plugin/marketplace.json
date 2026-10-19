@@ -1,17 +1,17 @@
 {
-  "name": "autogestor",
+  "name": "abaco",
   "owner": {
     "name": "Edgar D Galo",
     "url": "https://dgalodesign.com"
   },
   "plugins": [
     {
-      "name": "autogestor",
+      "name": "abaco",
       "source": "./plugin",
       "description": "Segundo check fiscal para autónomos en estimación directa (España)."
     }
   ],
   "metadata": {
-    "description": "Autogestor: segundo check fiscal para autónomos en España."
+    "description": "ábaco: segundo check fiscal para autónomos en España."
   }
 }

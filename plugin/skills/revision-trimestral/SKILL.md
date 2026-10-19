@@ -5,7 +5,7 @@ description: "Comprueba un trimestre fiscal de un autónomo (303, 130, 349 y lib
 
 # Revisión trimestral
 
-La IA lee los documentos; el motor de autogestor hace las cuentas. Nunca calcules casillas a mano: escribe el registro y llama a `comparar_trimestre`.
+La IA lee los documentos; el motor de ábaco hace las cuentas. Nunca calcules casillas a mano: escribe el registro y llama a `comparar_trimestre`.
 
 ## Pasos
 

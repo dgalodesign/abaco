@@ -1,15 +1,16 @@
-# Autogestor
+# ábaco
 
 Segundo check fiscal para autónomos en España. Recalcula tus modelos 303, 130 y 349 desde tus facturas, los compara con lo que presenta tu gestoría, estima tu Renta y vigila plazos, ahorros y ayudas.
 
 Tu IA lee las facturas; un motor con las reglas fiscales hace las cuentas, siempre igual y al céntimo. Todo se queda en tu ordenador.
 
-> Autogestor no es una gestoría ni asesoramiento profesional. No presenta nada ante Hacienda. Te ayuda a revisar y a preguntar mejor.
+> ábaco no es una gestoría ni asesoramiento profesional. No presenta nada ante Hacienda. Te ayuda a revisar y a preguntar mejor.
 
 ## Para quién es
 
 - Autónomos en **estimación directa** (normal o simplificada) con **IVA general**: 303, 130 y 349.
 - También si además trabajas por cuenta ajena (lee tus nóminas para la Renta).
+- Y si **solo eres asalariado**: estima tu Renta desde las nóminas (con la reducción por rendimientos del trabajo), te dice qué retención pedir y qué deducciones y ayudas te encajan.
 - Parámetros autonómicos incluidos: **Andalucía**. Otras comunidades se pueden añadir en `src/rules/irpf.ts`.
 
 Todavía no cubre módulos, recargo de equivalencia, IVA franquiciado ni sociedades.
@@ -30,14 +31,16 @@ Necesitas [Node.js](https://nodejs.org) 20 o posterior.
 ### Claude Code (plugin)
 
 ```bash
-claude plugin marketplace add <ruta o URL de este repositorio>
+claude plugin marketplace add dgalodesign/abaco
 ```
 
 ```bash
-claude plugin install autogestor@autogestor
+claude plugin install abaco@abaco
 ```
 
-Al activarlo te pide la **carpeta del autónomo**: la carpeta donde guardas facturas y declaraciones. Después di «configura autogestor» y la skill `configurar` te hará las preguntas del perfil.
+Al activarlo te pide la **carpeta del autónomo**: la carpeta donde guardas facturas y declaraciones. Después di «configura ábaco» y la skill `configurar` te hará las preguntas del perfil.
+
+Para actualizar: `claude plugin marketplace update abaco` y `claude plugin update abaco@abaco`, y reinicia Claude Code. Tus datos (`_autogestor/` en tu carpeta) no se tocan.
 
 ### Claude Desktop y otras IA compatibles con MCP
 
@@ -46,9 +49,9 @@ El motor es un servidor MCP en un solo archivo (`plugin/server/autogestor-mcp.mj
 ```json
 {
   "mcpServers": {
-    "autogestor": {
+    "abaco": {
       "command": "node",
-      "args": ["C:/ruta/a/autogestor/plugin/server/autogestor-mcp.mjs"],
+      "args": ["C:/ruta/a/abaco/plugin/server/autogestor-mcp.mjs"],
       "env": { "AUTOGESTOR_DIR": "C:/ruta/a/tu/carpeta/de/autonomo" }
     }
   }

@@ -109977,7 +109977,7 @@ async function comparar(base, ejercicio, t2) {
 // src/informe.ts
 var eur = (n3) => n3 === void 0 ? "\u2014" : n3.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 function tabla(filas2) {
-  const l2 = ["| Casilla | Gestor\xEDa | Autogestor | Diferencia |", "|---|--:|--:|--:|"];
+  const l2 = ["| Casilla | Gestor\xEDa | \xE1baco | Diferencia |", "|---|--:|--:|--:|"];
   for (const f2 of filas2) {
     const marca = f2.dif === 0 ? "" : f2.informativa ? " (informativa)" : f2.redondeo ? " (redondeo)" : " **\u26A0**";
     l2.push(`| ${f2.casilla} | ${eur(f2.gestor)} | ${eur(f2.propio)} | ${f2.dif === 0 ? "0" : eur(f2.dif)}${marca} |`);
@@ -109988,7 +109988,7 @@ var veredicto = (filas2) => filas2.some((f2) => !f2.informativa && !f2.redondeo)
 function informeMarkdown(c2) {
   const out = [];
   const T2 = `T${c2.trimestre} ${c2.ejercicio}`;
-  out.push(`# Comprobaci\xF3n ${T2}`, "", `Generado el ${(/* @__PURE__ */ new Date()).toLocaleDateString("es-ES")} por autogestor. Compara lo presentado por la gestor\xEDa con un c\xE1lculo propio hecho desde las facturas.`, "");
+  out.push(`# Comprobaci\xF3n ${T2}`, "", `Generado el ${(/* @__PURE__ */ new Date()).toLocaleDateString("es-ES")} por \xE1baco. Compara lo presentado por la gestor\xEDa con un c\xE1lculo propio hecho desde las facturas.`, "");
   out.push("## Resumen", "");
   if (c2.m303) out.push(`- **303:** ${veredicto(c2.m303.filas)} (justificante ${c2.m303.decl.justificante ?? "no presentado"})`);
   if (c2.m130) out.push(`- **130:** ${veredicto(c2.m130.filas)} (justificante ${c2.m130.decl.justificante ?? "no presentado"})`);
@@ -110018,7 +110018,7 @@ function informeMarkdown(c2) {
       out.push("");
     }
     if (c2.libro.diferencias.length) {
-      out.push("| Factura | Proveedor/cliente | Campo | Gestor\xEDa | Autogestor |", "|---|---|---|--:|--:|");
+      out.push("| Factura | Proveedor/cliente | Campo | Gestor\xEDa | \xE1baco |", "|---|---|---|--:|--:|");
       for (const d2 of c2.libro.diferencias) out.push(`| ${d2.numero} | ${d2.contraparte} | ${d2.campo} | ${d2.gestor} | ${d2.propio} |`);
     }
     if (!c2.libro.soloGestor.length && !c2.libro.soloPropio.length && !c2.libro.diferencias.length) out.push("Todas las facturas coinciden.");
@@ -110224,7 +110224,7 @@ function cuerpo(d2, meta3) {
     <div class="prev">${htmlPrev}</div>
   </section>
 
-  <footer>Generado el ${fecha2(hoy2)} por autogestor a partir de ${actividad ? "tus facturas, los modelos presentados por la gestor\xEDa y ESTADO.md" : "tus n\xF3minas y tu perfil"}. Las fechas de plazo son las generales: conf\xEDrmalas con el calendario del contribuyente de la AEAT. Estimaciones, no asesoramiento vinculante.</footer>
+  <footer>Generado el ${fecha2(hoy2)} por \xE1baco a partir de ${actividad ? "tus facturas, los modelos presentados por la gestor\xEDa y ESTADO.md" : "tus n\xF3minas y tu perfil"}. Las fechas de plazo son las generales: conf\xEDrmalas con el calendario del contribuyente de la AEAT. Estimaciones, no asesoramiento vinculante.</footer>
 </main>
 <script>
 // Recalcula las cuentas atr\xE1s al d\xEDa en que se abre el panel
@@ -110775,7 +110775,7 @@ async function generarPanel(base, ejercicio, hoy2) {
   const previsiones = [...seg.previsiones];
   if (analisis) {
     const r3 = analisis.renta.resultado;
-    previsiones.unshift({ concepto: `Renta ${ejercicio}`, importe: Math.abs(r3), signo: r3 > 0 ? "pagar" : "cobrar", cuando: `abril\u2013junio de ${ejercicio + 1}`, nota: "Estimaci\xF3n de autogestor: detalle en \xABRenta y ahorro\xBB." });
+    previsiones.unshift({ concepto: `Renta ${ejercicio}`, importe: Math.abs(r3), signo: r3 > 0 ? "pagar" : "cobrar", cuando: `abril\u2013junio de ${ejercicio + 1}`, nota: "Estimaci\xF3n de \xE1baco: detalle en \xABRenta y ahorro\xBB." });
   }
   const datos = {
     trimestres,
@@ -110818,7 +110818,7 @@ var seguro = (fn2) => async (a2) => {
 var a\u00F1o = external_exports.number().int().min(2020).max(2100).describe("Ejercicio, p. ej. 2026");
 var trimestre = external_exports.number().int().min(1).max(4).describe("Trimestre: 1, 2, 3 o 4");
 function crearServidor() {
-  const s2 = new McpServer({ name: "autogestor", version: VERSION });
+  const s2 = new McpServer({ name: "abaco", version: VERSION });
   s2.registerTool(
     "estructura_carpeta",
     {
