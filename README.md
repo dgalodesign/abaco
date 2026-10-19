@@ -113,4 +113,4 @@ Los parámetros fiscales están validados con el Manual práctico de Renta 2025 
 
 ## Licencia
 
-[MIT](LICENSE) © 2026 Edgar D Galo. Este proyecto no es asesoramiento fiscal profesional: ábaco se usa bajo tu responsabilidad y consulta las dudas de criterio con tu gestoría.
+[MIT](LICENSE) © 2026 Edgar D Galo. Este proyecto no es asesoramiento fiscal profesional. Usa ábaco bajo tu responsabilidad y consulta las dudas de criterio con tu gestoría.
