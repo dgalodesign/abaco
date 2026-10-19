@@ -1,0 +1,17 @@
+{
+  "name": "autogestor",
+  "owner": {
+    "name": "Edgar D Galo",
+    "url": "https://dgalodesign.com"
+  },
+  "plugins": [
+    {
+      "name": "autogestor",
+      "source": "./plugin",
+      "description": "Segundo check fiscal para autónomos en estimación directa (España)."
+    }
+  ],
+  "metadata": {
+    "description": "Autogestor: segundo check fiscal para autónomos en España."
+  }
+}

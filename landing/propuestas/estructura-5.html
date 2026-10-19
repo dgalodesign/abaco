@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es" data-tema="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ábaco · propuesta estructura 5 · Conversación</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2b5a'/%3E%3Cpath d='M6 11h20M6 21h20' stroke='%23c9cede' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='11' r='3.6' fill='%23f0a92e'/%3E%3Ccircle cx='20' cy='21' r='3.6' fill='%23f0a92e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=Gabarito:wght@600;700;800&family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="temas.css">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* Conversación: la navegación son preguntas. Cada pregunta abre una respuesta en el hilo; Ctrl+K salta a cualquier tema. */
+.conversa { max-width: 48rem; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-block: clamp(2.5rem, 7vw, 5rem) 7rem; display: grid; gap: 1.5rem; }
+.saludo { display: grid; gap: 1.2rem; }
+.saludo h1 { font-size: clamp(2.5rem, 6vw, 4.4rem); }
+.chips { display: flex; flex-wrap: wrap; gap: .55rem; }
+.chips button { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--linea); background: var(--tarjeta); color: var(--tinta); font: 500 .95rem var(--texto); padding: .6rem 1rem .6rem .8rem; border-radius: 999px; cursor: pointer; transition: transform .25s cubic-bezier(.3,1.6,.5,1), border-color .2s, background-color .2s; }
+.chips button::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--cuenta); transition: transform .3s; }
+.chips button:hover { transform: translateY(-2px); border-color: var(--marca); }
+.chips button:hover::before { transform: scale(1.4); }
+.chips button.vista { color: var(--tinta-suave); }
+.chips button.vista::before { background: var(--ok); }
+.chips button.principal { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+[data-tema="b"] .chips button.principal { color: #1a2a6c; }
+.hilo { display: grid; gap: 1.25rem; }
+.turno { display: grid; gap: .8rem; }
+.burbuja-tu { justify-self: end; max-width: 80%; background: var(--marca); color: var(--sobre-marca); padding: .7rem 1rem; border-radius: 18px 18px 4px 18px; font-weight: 500; }
+[data-tema="b"] .burbuja-tu { color: #1a2a6c; }
+.burbuja-abaco { justify-self: start; width: 100%; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: .75rem; align-items: start; }
+.avatar { width: 2.2rem; height: 2.2rem; border-radius: 10px; background: var(--marca); display: grid; place-items: center; }
+.avatar svg { width: 1.4rem; height: 1.4rem; }
+.respuesta { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 4px 18px 18px 18px; padding: 1.1rem 1.25rem; display: grid; gap: .9rem; min-width: 0; }
+.respuesta > h2 { font-size: 1.35rem; font-family: var(--texto); font-weight: 600; letter-spacing: 0; }
+.respuesta p { color: var(--tinta-suave); }
+.escribiendo { display: inline-flex; gap: 5px; padding: .9rem 1rem; background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 4px 18px 18px 18px; }
+.escribiendo i { width: 9px; height: 9px; border-radius: 50%; background: var(--cuenta); animation: bote 1s ease-in-out infinite; }
+.escribiendo i:nth-child(2) { animation-delay: .15s; } .escribiendo i:nth-child(3) { animation-delay: .3s; }
+@keyframes bote { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+.sigue { display: grid; gap: .5rem; padding-left: 2.95rem; }
+.sigue .etiqueta { font-size: .7rem; }
+.respuestas-ocultas { display: grid; gap: 1.25rem; }
+.js .respuestas-ocultas { display: none; }
+/* Paleta de temas (Ctrl+K) */
+.atajo { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--linea); background: var(--tarjeta); color: var(--tinta-suave); border-radius: 999px; padding: .4rem .5rem .4rem .8rem; font: 500 .85rem var(--texto); cursor: pointer; }
+.atajo kbd { font: 500 .7rem var(--mono); border: 1px solid var(--linea); border-radius: 5px; padding: .1rem .35rem; color: var(--tinta); }
+dialog.paleta { border: 1px solid var(--linea); border-radius: var(--radio-grande); background: var(--tarjeta); color: var(--tinta); padding: 0; width: min(36rem, calc(100vw - 2rem)); margin-top: 12vh; box-shadow: 0 40px 80px -30px rgba(0,0,0,.5); }
+dialog.paleta::backdrop { background: color-mix(in srgb, var(--fondo) 55%, transparent); backdrop-filter: blur(4px); }
+.paleta input { width: 100%; border: 0; border-bottom: 1px solid var(--linea); background: transparent; color: var(--tinta); font: 500 1.1rem var(--texto); padding: 1rem 1.2rem; outline: none; }
+.paleta ul { list-style: none; margin: 0; padding: .4rem; max-height: 50vh; overflow: auto; }
+.paleta li button { width: 100%; text-align: left; border: 0; background: transparent; color: var(--tinta); font: 500 1rem var(--texto); padding: .7rem .8rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: .6rem; }
+.paleta li button::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--varilla); }
+.paleta li button[aria-selected="true"], .paleta li button:hover { background: var(--fondo); }
+.paleta li button[aria-selected="true"]::before { background: var(--cuenta); }
+.paleta .ayuda { padding: .6rem 1.2rem; border-top: 1px solid var(--linea); font-size: .78rem; color: var(--tinta-suave); }
+@media (max-width: 40rem) { .atajo kbd { display: none; } .burbuja-tu { max-width: 90%; } .sigue { padding-left: 0; } }
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="envoltura">
+    <a class="logo" href="#" aria-label="ábaco, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--marca)"/><path d="M6 11h20M6 21h20" stroke="var(--sobre-marca)" stroke-opacity=".55" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--cuenta)"/><circle cx="20" cy="21" r="3.6" fill="var(--cuenta-2)"/></svg>
+      ábaco
+    </a>
+    <nav class="navegacion" aria-label="Principal" style="gap:.8rem">
+      <button class="atajo" type="button" id="abrir-paleta">Buscar un tema <kbd>Ctrl K</kbd></button>
+      <a class="boton" href="#probar" data-tema-link="probar">Quiero probarlo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="conversa">
+  <div class="saludo">
+    <span class="etiqueta">Para autónomos en España</span>
+    <h1 data-partir>Pregúntale a <span class="marca-texto">ábaco.</span></h1>
+    <p class="entradilla">Revisa lo que presenta tu gestoría, anticipa tu Renta y te avisa de lo que te puedes ahorrar. ¿Por dónde empezamos?</p>
+    <div class="chips" id="chips-inicio" role="group" aria-label="Preguntas"></div>
+  </div>
+
+  <div class="hilo" id="hilo" aria-live="polite"></div>
+
+  <!-- Las respuestas. Sin JavaScript se ven todas seguidas. -->
+  <div class="respuestas-ocultas" id="respuestas">
+    <section class="respuesta" id="gestoria" data-pregunta="¿Lo hace bien mi gestoría?" aria-labelledby="r-gestoria">
+      <h2 id="r-gestoria">Lo comprobamos casilla a casilla</h2>
+      <p>Claude lee tus facturas y ábaco rehace el 303, el 130 y el 349 al céntimo. Después lo compara con lo que presentó tu gestoría. Prueba: mueve una cuenta y verás la diferencia.</p>
+      <figure class="abaco" aria-label="Ábaco de ejemplo con los modelos 303, 130 y 349. Puedes mover las cuentas.">
+        <div class="abaco-cab"><span class="etiqueta">Tercer trimestre · ejemplo</span><span class="pista">Mueve las cuentas</span></div>
+        <div class="fila"><span class="modelo">303<small>IVA</small></span><div class="varilla" data-cuentas="7" data-objetivo="4" data-valor="21"></div><span class="resultado">0,00 €</span></div>
+        <div class="fila"><span class="modelo">130<small>IRPF</small></span><div class="varilla" data-cuentas="6" data-objetivo="2" data-valor="15"></div><span class="resultado">0,00 €</span></div>
+        <div class="fila"><span class="modelo">349<small>UE</small></span><div class="varilla" data-cuentas="5" data-objetivo="3" data-valor="9"></div><span class="resultado">0,00 €</span></div>
+        <div class="abaco-pie"><span>29 facturas revisadas</span><span>Diferencia total <strong class="num" data-total>0,00 €</strong></span></div>
+      </figure>
+      <p>Si algo no cuadra, te dice qué factura es, por qué pasa y si merece la pena reclamarlo.</p>
+    </section>
+    <section class="respuesta" id="renta" data-pregunta="¿Cuánto me saldrá la Renta?" aria-labelledby="r-renta">
+      <h2 id="r-renta">Te lo digo meses antes</h2>
+      <p>Con tus nóminas y tu actividad, ábaco estima la Renta del año. Cifras de ejemplo:</p>
+      <div class="ejemplo"><div class="linea-ej"><span>Renta 2026 estimada</span><strong class="num" style="color:var(--rojo)">≈ 640 € a pagar</strong></div><div class="linea-ej"><span>Retención en nómina para cubrirla</span><span class="num">8 % → 11,5 %</span></div><div class="linea-ej"><span>Deducción del alquiler (600 €)</span><span class="chip alerta">a 450 € del límite</span></div><div class="barra" aria-hidden="true"><span></span></div></div>
+      <p>El aviso del límite importa: si te pasas 450 € de base imponible, pierdes los 600 € de deducción.</p>
+    </section>
+    <section class="respuesta" id="ayudas" data-pregunta="¿Hay ayudas para mí?" aria-labelledby="r-ayudas">
+      <h2 id="r-ayudas">Cruzo tu perfil con las ayudas vigentes</h2>
+      <p>Siempre con su fuente oficial, y vigilo cuándo abre cada convocatoria. Por ejemplo:</p>
+      <div class="ejemplo"><div class="linea-ej"><span>Deducción por alquiler (Andalucía)</span><span class="chip ok">Cumples</span></div><div class="linea-ej"><span>Bono Alquiler Joven · hasta 6.000 €</span><span class="chip alerta">Posible</span></div><div class="linea-ej"><span>Deducción por compra de vivienda</span><span class="chip">Al comprar</span></div></div>
+    </section>
+    <section class="respuesta" id="plazos" data-pregunta="¿Qué vence y quién se encarga?" aria-labelledby="r-plazos">
+      <h2 id="r-plazos">Un panel que se actualiza solo</h2>
+      <p>Lo que vence, quién se encarga y lo que ya está presentado. Te aviso una semana antes. Datos de ejemplo:</p>
+      <div class="pv-bloque" style="background:var(--fondo)"><div class="pv-fila hecho"><span class="num">20 oct</span><span>303 · 130 · 349 · T3</span><span class="chip ok">Presentado</span></div><div class="pv-fila"><span class="num">31 oct</span><span>Cambio de base del RETA</span><span class="chip alerta">Este mes</span></div><div class="pv-fila"><span class="num">1 feb</span><span>303 · 130 · 390 · T4</span><span class="chip">Gestoría</span></div></div>
+    </section>
+    <section class="respuesta" id="privacidad" data-pregunta="¿Dónde van mis datos?" aria-labelledby="r-priv">
+      <h2 id="r-priv">A ningún sitio: se quedan en tu ordenador</h2>
+      <p>ábaco no es una web donde subes tus facturas. Es un motor que corre junto a Claude y solo lee y escribe en tu carpeta. Sin cuentas ni servidores con tus datos fiscales.</p>
+      <p>Necesitas una suscripción de pago a Claude. Es para autónomos en estimación directa con IVA general.</p>
+    </section>
+    <section class="respuesta" id="quien" data-pregunta="¿Quién está detrás?" aria-labelledby="r-quien">
+      <h2 id="r-quien">Edgar, diseñador y autónomo</h2>
+      <p>Cada trimestre firmaba lo que me mandaba mi gestoría sin entender del todo qué firmaba. Construí ábaco con Claude para revisar mis propios impuestos: la primera comprobación cuadró al céntimo y encontró un límite de deducción que estaba a punto de perder.</p>
+      <p><a href="https://dgalodesign.com" style="color:var(--marca);font-weight:600">Mi portfolio</a></p>
+    </section>
+    <section class="respuesta" id="probar" data-pregunta="Quiero probarlo" aria-labelledby="r-probar">
+      <h2 id="r-probar">¡Genial! Escríbeme</h2>
+      <p>ábaco está en pruebas. Te aviso cuando puedas usarlo. Solo uso tu email para responderte y avisarte (<a href="../privacidad.html">cómo trato tus datos</a>).</p>
+      <div class="acciones"><a class="boton" href="mailto:dgalodesign@gmail.com?subject=Quiero%20probar%20%C3%A1baco">Quiero probar ábaco</a></div>
+      <p class="correo" style="justify-content:flex-start">O escribe a <code id="direccion">dgalodesign@gmail.com</code> <button class="copiar" id="copiar" type="button">Copiar</button></p>
+    </section>
+  </div>
+</main>
+
+<div class="envoltura"><footer><p>ábaco no es una gestoría ni asesoramiento fiscal profesional, y no presenta declaraciones.</p><p>Un proyecto de <a href="https://dgalodesign.com">D Galo Design</a> · <a href="../privacidad.html">Privacidad</a></p></footer></div>
+
+<dialog class="paleta" id="paleta" aria-label="Buscar un tema">
+  <input id="buscar" type="text" placeholder="¿Qué quieres saber?" autocomplete="off" aria-label="Buscar un tema" aria-controls="resultados">
+  <ul id="resultados" role="listbox" aria-label="Temas"></ul>
+  <div class="ayuda">↑ ↓ para moverte · Intro para abrir · Esc para cerrar</div>
+</dialog>
+
+<div class="selector" role="group" aria-label="Propuesta visual"><span>Visual</span>
+  <button type="button" data-elegir="a" aria-pressed="true">A<span class="largo"> · Impreso</span></button>
+  <button type="button" data-elegir="b" aria-pressed="false">B<span class="largo"> · Cobalto</span></button>
+  <button type="button" data-elegir="c" aria-pressed="false">C<span class="largo"> · Colores</span></button>
+  <a href="index.html">Propuestas</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="anim.js"></script>
+<script>
+// Conversación: cada pregunta mueve su respuesta al hilo, con «escribiendo…» y preguntas para seguir
+(function () {
+  var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var respuestas = Array.prototype.slice.call(document.querySelectorAll('#respuestas > .respuesta'));
+  var temas = respuestas.map(function (r) { return { id: r.id, pregunta: r.dataset.pregunta, nodo: r }; });
+  var hilo = document.getElementById('hilo');
+  var vistos = {};
+  var avatar = '<svg viewBox="0 0 32 32"><path d="M6 11h20M6 21h20" stroke="var(--sobre-marca)" stroke-opacity=".6" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--cuenta)"/><circle cx="20" cy="21" r="3.6" fill="var(--cuenta-2)"/></svg>';
+
+  function chips(contenedor, excluir) {
+    contenedor.innerHTML = '';
+    temas.forEach(function (t) {
+      if (excluir && (vistos[t.id] || t.id === excluir)) return;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = t.pregunta;
+      if (t.id === 'probar') b.className = 'principal';
+      if (vistos[t.id]) b.classList.add('vista');
+      b.addEventListener('click', function () { preguntar(t.id); });
+      contenedor.appendChild(b);
+    });
+  }
+  function refrescarInicio() { chips(document.getElementById('chips-inicio')); }
+
+  function preguntar(id) {
+    var t = temas.filter(function (x) { return x.id === id; })[0];
+    if (!t) return;
+    if (vistos[id]) { t.nodo.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' }); destello(t.nodo); return; }
+    vistos[id] = true;
+    refrescarInicio();
+    var turno = document.createElement('div'); turno.className = 'turno';
+    var tu = document.createElement('div'); tu.className = 'burbuja-tu'; tu.textContent = t.pregunta;
+    var fila = document.createElement('div'); fila.className = 'burbuja-abaco';
+    var av = document.createElement('div'); av.className = 'avatar'; av.innerHTML = avatar;
+    var escribe = document.createElement('div'); escribe.className = 'escribiendo'; escribe.setAttribute('aria-label', 'ábaco está escribiendo'); escribe.innerHTML = '<i></i><i></i><i></i>';
+    fila.appendChild(av); fila.appendChild(escribe);
+    turno.appendChild(tu); turno.appendChild(fila);
+    hilo.appendChild(turno);
+    if (window.gsap && !quieto) gsap.from(tu, { y: 14, autoAlpha: 0, duration: .35, ease: 'power2.out' });
+    turno.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(function () {
+      fila.replaceChild(t.nodo, escribe);
+      if (window.abacoRecolocar) window.abacoRecolocar();
+      if (window.gsap && !quieto) {
+        gsap.from(t.nodo.children, { y: 16, autoAlpha: 0, duration: .45, ease: 'power3.out', stagger: .08 });
+        t.nodo.querySelectorAll('.barra span').forEach(function (b) { gsap.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: 'power2.out', delay: .3 }); });
+      }
+      var sigue = document.createElement('div'); sigue.className = 'sigue';
+      var et = document.createElement('span'); et.className = 'etiqueta'; et.textContent = 'También te puede interesar';
+      var c = document.createElement('div'); c.className = 'chips'; chips(c, id);
+      if (c.children.length) { sigue.appendChild(et); sigue.appendChild(c); turno.appendChild(sigue); }
+      if (window.gsap && !quieto) gsap.from(c.children, { y: 10, autoAlpha: 0, duration: .3, stagger: .05, delay: .3 });
+    }, quieto ? 0 : 750);
+  }
+  function destello(n) { if (window.gsap && !quieto) gsap.fromTo(n, { boxShadow: '0 0 0 4px var(--cuenta)' }, { boxShadow: '0 0 0 0px var(--cuenta)', duration: 1.2 }); }
+  document.querySelectorAll('[data-tema-link]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); preguntar(a.dataset.temaLink); }); });
+  refrescarInicio();
+
+  // Paleta Ctrl+K
+  var dlg = document.getElementById('paleta'), input = document.getElementById('buscar'), lista = document.getElementById('resultados');
+  var sel = 0, filtrados = [];
+  function pintar() {
+    var q = input.value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    filtrados = temas.filter(function (t) { return !q || (t.pregunta + ' ' + t.id).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').indexOf(q) >= 0; });
+    sel = Math.min(sel, Math.max(0, filtrados.length - 1));
+    lista.innerHTML = '';
+    filtrados.forEach(function (t, i) {
+      var li = document.createElement('li'); var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'option'); b.setAttribute('aria-selected', String(i === sel)); b.textContent = t.pregunta + (vistos[t.id] ? '  ·  ya respondida' : '');
+      b.addEventListener('click', function () { cerrar(); preguntar(t.id); });
+      li.appendChild(b); lista.appendChild(li);
+    });
+  }
+  function abrir() { input.value = ''; sel = 0; pintar(); dlg.showModal(); input.focus(); }
+  function cerrar() { dlg.close(); }
+  document.getElementById('abrir-paleta').addEventListener('click', abrir);
+  document.addEventListener('keydown', function (e) { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); dlg.open ? cerrar() : abrir(); } });
+  input.addEventListener('input', function () { sel = 0; pintar(); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, filtrados.length - 1); pintar(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); pintar(); e.preventDefault(); }
+    else if (e.key === 'Enter' && filtrados[sel]) { var id = filtrados[sel].id; cerrar(); preguntar(id); }
+  });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) cerrar(); });
+})();
+</script>
+</body>
+</html>

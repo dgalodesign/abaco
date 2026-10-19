@@ -1,0 +1,84 @@
+[
+  {
+    "id": "bono-alquiler-joven-andalucia",
+    "nombre": "Bono Alquiler Joven",
+    "organismo": "Junta de Andalucía (con fondos del Ministerio de Vivienda)",
+    "tipo": "ayuda",
+    "importe": "Hasta 250 € al mes durante un máximo de 24 meses",
+    "importeMaximo": 6000,
+    "estado": "cerrada",
+    "plazo": "Convocatoria reabierta el 13/01/2026 y cerrada el 22/06/2026 al llegar a 15.000 solicitudes. Vigilar la próxima.",
+    "condiciones": {
+      "ccaa": "andalucia",
+      "edadMax": 35,
+      "requiereAlquiler": true,
+      "limiteIngresos": 25200,
+      "limiteIngresosUnidad": 33600,
+      "notaIngresos": "Ingresos del año de referencia ≤ 3 veces el IPREM (25.200 €) si vives solo, ≤ 4 veces (33.600 €) para la unidad de convivencia. Renta del alquiler ≤ 900 €/mes en los municipios de los grupos 1 a 3."
+    },
+    "comoPedirlo": "Telemáticamente en la Ventanilla Electrónica de la Junta (VEAJA) con certificado digital, por orden de llegada.",
+    "fuente": "https://www.juntadeandalucia.es/organismos/viviendajuventudyordenaciondelterritorio/areas/vivienda-rehabilitacion/fomento-alquiler/bono-alquiler-joven/paginas/convocatoria-2025.html",
+    "revisado": "2026-10-17"
+  },
+  {
+    "id": "deduccion-alquiler-andalucia",
+    "nombre": "Deducción autonómica por alquiler de vivienda habitual",
+    "organismo": "Junta de Andalucía (IRPF)",
+    "tipo": "deduccion",
+    "importe": "15 % del alquiler pagado, máximo 1.200 € al año",
+    "importeMaximo": 1200,
+    "estado": "permanente",
+    "plazo": "Se aplica en la Renta de cada año.",
+    "condiciones": { "ccaa": "andalucia", "edadMax": 35, "requiereAlquiler": true, "limiteBase": 25000 },
+    "comoPedirlo": "En la Renta, con el NIF del arrendador.",
+    "fuente": "https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025-deducciones-autonomicas/comunidad-autonoma-andalucia/cantidades-invertidas-alquiler-vivienda-habitual.html",
+    "revisado": "2026-10-17"
+  },
+  {
+    "id": "deduccion-vivienda-jovenes-andalucia",
+    "nombre": "Deducción autonómica por compra de vivienda habitual para menores de 35",
+    "organismo": "Junta de Andalucía (IRPF)",
+    "tipo": "deduccion",
+    "importe": "6 % de lo pagado por la vivienda (hipoteca incluida), sobre una base máxima de 9.040 € al año: hasta 542 €",
+    "importeMaximo": 542,
+    "estado": "permanente",
+    "plazo": "Se aplica en la Renta de cada año en que se pague la vivienda.",
+    "condiciones": { "ccaa": "andalucia", "edadMax": 35, "requiereCompraVivienda": true, "limiteBase": 25000 },
+    "comoPedirlo": "En la Renta.",
+    "fuente": "https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025-deducciones-autonomicas/comunidad-autonoma-andalucia/inversion-vivienda-habitual-protegida-personas-jovenes.html",
+    "revisado": "2026-10-17"
+  },
+  {
+    "id": "aval-ico-primera-vivienda",
+    "nombre": "Aval ICO para la compra de la primera vivienda",
+    "organismo": "Ministerio de Vivienda e ICO",
+    "tipo": "aval",
+    "importe": "El Estado avala hasta el 20 % del préstamo (25 % con calificación energética D o mejor): permite financiar casi toda la compra sin ahorro previo",
+    "importeMaximo": 0,
+    "estado": "abierta",
+    "plazo": "Línea vigente; se pide a través de los bancos adheridos.",
+    "condiciones": {
+      "edadMax": 35,
+      "requiereCompraVivienda": true,
+      "limiteIngresos": 37800,
+      "notaIngresos": "Ingresos ≤ 4,5 veces el IPREM (37.800 €) por comprador; desde el 19/06/2026 el límite depende de la provincia. Patrimonio ≤ 150.000 €. Tener 35 años o menos al firmar."
+    },
+    "comoPedirlo": "En el banco al pedir la hipoteca.",
+    "fuente": "https://www.ico.es/en/avales-ico-para-la-compra-de-mi-primera-vivienda",
+    "revisado": "2026-10-17"
+  },
+  {
+    "id": "cuota-cero-andalucia",
+    "nombre": "Cuota cero (Junta de Andalucía)",
+    "organismo": "Junta de Andalucía",
+    "tipo": "ayuda",
+    "importe": "Paga la cuota de autónomo del primer año (y del segundo en algunos casos)",
+    "importeMaximo": 0,
+    "estado": "cerrada",
+    "plazo": "Convocatoria 2024–2026 cerrada el 30/09/2026.",
+    "condiciones": { "ccaa": "andalucia", "soloNuevosAutonomos": true },
+    "comoPedirlo": "—",
+    "fuente": "https://www.juntadeandalucia.es/organismos/empleoempresaytrabajoautonomo/areas/trabajo-autonomo/fomento-trabajo-autonomo/paginas/subv-fomento-cuota-cero.html",
+    "revisado": "2026-10-17"
+  }
+]

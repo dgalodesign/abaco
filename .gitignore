@@ -1,0 +1,14 @@
+node_modules/
+plugin/.mcpb-cache/
+
+# Personal: no se publica
+local_*/
+local_*.json
+.claude/
+CLAUDE.md
+
+# Datos de usuario por si se prueba dentro del repo
+_autogestor/
+_Entrada/
+*.log
+.env

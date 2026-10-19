@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es" data-tema="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ábaco · propuestas de diseño</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@900&family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Courier+Prime&family=Figtree:wght@400;600&family=Gabarito:wght@700&family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Young+Serif&display=swap">
+<link rel="stylesheet" href="temas.css">
+<style>
+main { padding-block: 3rem 5rem; display: grid; gap: 3rem; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+.prop { padding: 1.2rem; display: grid; gap: .6rem; align-content: start; text-decoration: none; transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+.prop:hover { transform: translateY(-4px); box-shadow: 0 24px 40px -30px color-mix(in srgb, var(--marca) 60%, transparent); }
+.prop p { color: var(--tinta-suave); font-size: .92rem; }
+.muestra { height: 5.5rem; border-radius: 10px; display: grid; place-items: center; font-size: 2rem; overflow: hidden; }
+.m1 { background: #f2f3ef; color: #1c2b5a; font-family: "Gloock", serif; border: 1px solid #d9dcd4; }
+.m2 { background: #1a2a6c; color: #ffb547; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; letter-spacing: -.04em; }
+.m3 { background: #eef3f9; color: #3b5bdb; font-family: "Gabarito", sans-serif; font-weight: 700; border: 1px solid #d6e0ec; }
+.m4 { background: #eef3ea repeating-linear-gradient(to bottom, transparent 0 15px, #c4d4c1 15px 16px); color: #13342a; font-family: "Young Serif", serif; border: 1px solid #c4d4c1; }
+.m5 { background: #ffd400; color: #0a0a0a; font-family: "Archivo", sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -.05em; border: 2px solid #0a0a0a; border-radius: 0; }
+.grande-cta { display: inline-flex; font-size: 1.1rem; padding: 1rem 1.5rem 1rem 2.6rem; }
+.numero { font: 500 .78rem var(--mono); color: var(--tinta-suave); }
+details summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="envoltura">
+  <header style="display:grid;gap:1.1rem;max-width:52rem">
+    <span class="etiqueta">ábaco · propuestas de diseño</span>
+    <h1 style="font-size:clamp(2.2rem,5vw,3.6rem)">5 estilos × 5 navegaciones × 3 presentaciones</h1>
+    <p class="entradilla" style="max-width:62ch">Mézclalas en vivo: 75 combinaciones con el mismo contenido. La combinación queda en la dirección para compartirla. Todas las cifras son de ejemplo.</p>
+    <div><a class="boton grande-cta" href="mezclador/index.html?v=1&amp;n=1&amp;p=1">Abrir el mezclador</a></div>
+  </header>
+
+  <section style="display:grid;gap:1rem" aria-labelledby="t-v">
+    <h2 id="t-v" style="font-size:1.6rem">Estilo visual</h2>
+    <div class="rejilla">
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=1&amp;p=1"><div class="muestra m1">ábaco</div><span class="numero">1</span><h3>Impreso</h3><p>Papel de impreso oficial, cobalto y cuentas ámbar. Rigor. Claro y oscuro.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=2&amp;n=1&amp;p=1"><div class="muestra m2">ábaco</div><span class="numero">2</span><h3>Cobalto</h3><p>Todo azul, marca enorme, grotesca expresiva. Producto con carácter.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=3&amp;n=1&amp;p=1"><div class="muestra m3">ábaco</div><span class="numero">3</span><h3>Colores</h3><p>Cielo claro y cuentas de colores de ábaco escolar. Cercano.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=4&amp;n=1&amp;p=1"><div class="muestra m4">ábaco</div><span class="numero">4 · nuevo</span><h3>Libro de cuentas</h3><p>Papel pautado de contable, letra de máquina de escribir, cuentas rojas.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=5&amp;n=1&amp;p=1"><div class="muestra m5">ábaco</div><span class="numero">5 · nuevo</span><h3>Suizo</h3><p>Blanco y negro, grotesca pesada en mayúsculas, amarillo señal y sombras duras.</p></a>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:1rem" aria-labelledby="t-n">
+    <h2 id="t-n" style="font-size:1.6rem">Navegación y contenido</h2>
+    <div class="rejilla">
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=1&amp;p=1"><span class="numero">1</span><h3>Relato</h3><p>Una página larga con la navegación fija y un progreso hecho de cuentas.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=2&amp;p=1"><span class="numero">2</span><h3>Recorrido guiado</h3><p>Seis capítulos y un escenario fijo que se transforma a cada paso.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=3&amp;p=1"><span class="numero">3 · nueva</span><h3>Mosaico</h3><p>Una cuadrícula tipo bento. Cada tarjeta se expande a su detalle con una transición.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=4&amp;p=1"><span class="numero">4 · nueva</span><h3>Historias</h3><p>Pantallas completas con barras de progreso, como las stories. Toca, desliza o usa las flechas.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=5&amp;p=1"><span class="numero">5</span><h3>Conversación</h3><p>La navegación son preguntas; ábaco responde en un hilo. Ctrl+K para buscar.</p></a>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:1rem" aria-labelledby="t-p">
+    <h2 id="t-p" style="font-size:1.6rem">Presentación de la herramienta</h2>
+    <div class="rejilla">
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=1&amp;p=1"><span class="numero">1</span><h3>Ábaco jugable</h3><p>La metáfora: mueve las cuentas, descuadra una fila y vuelve a cuadrarla.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=1&amp;p=2"><span class="numero">2</span><h3>Panel del producto</h3><p>El panel real con datos de ejemplo: avisos, Renta y trimestres comprobados.</p></a>
+      <a class="tarjeta prop" href="mezclador/index.html?v=1&amp;n=1&amp;p=3"><span class="numero">3</span><h3>Modelo 303 que se rellena</h3><p>Las facturas rellenan las casillas del formulario y aparece el sello «Cuadra con tu gestoría». Pasa el ratón por una casilla para ver de qué facturas sale.</p></a>
+    </div>
+  </section>
+
+  <details>
+    <summary>Versiones anteriores (páginas sueltas)</summary>
+    <p style="margin-top:.8rem;color:var(--tinta-suave)"><a href="estructura-1.html">Relato</a> · <a href="estructura-2.html">Recorrido guiado</a> · <a href="estructura-3.html">Escritorio</a> · <a href="estructura-4.html">Varillas</a> · <a href="estructura-5.html">Conversación</a></p>
+  </details>
+</main>
+</body>
+</html>

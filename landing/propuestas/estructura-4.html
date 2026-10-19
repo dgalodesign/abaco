@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es" data-tema="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ábaco · propuesta estructura 4 · Varillas</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2b5a'/%3E%3Cpath d='M6 11h20M6 21h20' stroke='%23c9cede' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='11' r='3.6' fill='%23f0a92e'/%3E%3Ccircle cx='20' cy='21' r='3.6' fill='%23f0a92e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=Gabarito:wght@600;700;800&family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="temas.css">
+<style>
+/* Varillas: el contenido avanza en horizontal. La navegación es un ábaco: cada sección es una cuenta que pasa al otro lado. */
+.nav-abaco { position: relative; height: 34px; flex: 1; max-width: 30rem; margin-inline: 1.5rem; }
+.nav-abaco::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: var(--varilla); border-radius: 2px; }
+.nav-abaco button { position: absolute; top: 50%; width: 22px; height: 18px; margin: -9px 0 0 -11px; border: 0; padding: 0; border-radius: 50% / 46%; cursor: pointer; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--cuenta) 50%, white), var(--cuenta) 55%, var(--cuenta-sombra)); transition: filter .2s; }
+.nav-abaco button:hover { filter: brightness(1.1); }
+.nav-abaco button[aria-current="step"] { box-shadow: 0 0 0 3px var(--fondo), 0 0 0 5px var(--cuenta); }
+.nav-abaco .rotulo { position: absolute; top: 100%; left: 0; transform: translateX(-50%); font: 500 .68rem var(--mono); color: var(--tinta-suave); white-space: nowrap; pointer-events: none; transition: opacity .25s; }
+@media (max-width: 52rem) { .nav-abaco { margin-inline: .75rem; } .nav-abaco .rotulo { display: none; } .cabecera .navegacion { display: none; } }
+
+.pista-h { position: relative; overflow: hidden; }
+.carril { display: flex; width: max-content; }
+.panel-h { width: 100vw; height: calc(100vh - 4.5rem); flex: none; display: grid; align-content: center; padding-left: max(20px, 6vw); padding-right: max(20px, 6vw); position: relative; }
+.panel-h .contenido { max-width: 72rem; width: 100%; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+.panel-h .numero { position: absolute; right: max(20px, 6vw); top: 1.5rem; font: 500 clamp(4rem, 12vw, 9rem)/1 var(--display); color: var(--linea); letter-spacing: -0.04em; pointer-events: none; }
+.panel-h:nth-child(even) { background: var(--fondo-2); }
+.panel-h h2 { font-size: clamp(1.9rem, 3.6vw, 3rem); }
+.panel-h .texto { display: grid; gap: 1rem; align-content: start; }
+.panel-h .texto p { color: var(--tinta-suave); max-width: 44ch; }
+.avance { position: absolute; left: max(20px, 6vw); bottom: 1.5rem; font: 500 .78rem var(--mono); color: var(--tinta-suave); display: flex; gap: .5rem; align-items: center; }
+.avance::after { content: "→"; animation: empuja 1.6s ease-in-out infinite; }
+@keyframes empuja { 50% { transform: translateX(6px); } }
+@media (max-width: 52rem) {
+  .pista-h { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .pista-h::-webkit-scrollbar { display: none; }
+  .panel-h { height: auto; min-height: calc(100svh - 4.5rem); scroll-snap-align: start; align-content: start; padding-top: 2.5rem; padding-bottom: 4rem; }
+  .panel-h .contenido { grid-template-columns: 1fr; }
+  .panel-h .numero { font-size: 4.5rem; top: .8rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="envoltura">
+    <a class="logo" href="#inicio" aria-label="ábaco, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--marca)"/><path d="M6 11h20M6 21h20" stroke="var(--sobre-marca)" stroke-opacity=".55" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--cuenta)"/><circle cx="20" cy="21" r="3.6" fill="var(--cuenta-2)"/></svg>
+      ábaco
+    </a>
+    <div class="nav-abaco" role="group" aria-label="Secciones: cada cuenta es una sección"></div>
+    <nav class="navegacion" aria-label="Principal"><a class="boton" href="#lista">Quiero probarlo</a></nav>
+  </div>
+</header>
+
+<main>
+  <section class="envoltura hero" id="inicio" aria-labelledby="titulo">
+    <div class="hero-texto">
+      <span class="etiqueta">Para autónomos en España</span>
+      <h1 id="titulo" data-partir>Tus impuestos, <span class="marca-texto">cuenta por cuenta.</span></h1>
+      <p class="entradilla">ábaco recalcula tus impuestos desde tus facturas, revisa lo que presenta tu gestoría y te avisa de lo que te puedes ahorrar.</p>
+      <div class="acciones"><a class="boton" href="#h-problema">Empieza a deslizar</a><a class="boton secundario" href="#lista">Apúntate</a></div>
+      <p class="nota-hero">Baja con la rueda o desliza: cada sección es una cuenta del ábaco de arriba.</p>
+    </div>
+    <figure class="abaco" aria-label="Ábaco de ejemplo con los modelos 303, 130 y 349. Puedes mover las cuentas.">
+      <div class="abaco-cab"><span class="etiqueta">Tercer trimestre · ejemplo</span><span class="pista">Mueve las cuentas</span></div>
+      <div class="fila"><span class="modelo">303<small>IVA</small></span><div class="varilla" data-cuentas="7" data-objetivo="4" data-valor="21"></div><span class="resultado">0,00 €</span></div>
+      <div class="fila"><span class="modelo">130<small>IRPF</small></span><div class="varilla" data-cuentas="6" data-objetivo="2" data-valor="15"></div><span class="resultado">0,00 €</span></div>
+      <div class="fila"><span class="modelo">349<small>UE</small></span><div class="varilla" data-cuentas="5" data-objetivo="3" data-valor="9"></div><span class="resultado">0,00 €</span></div>
+      <div class="abaco-pie"><span>29 facturas revisadas</span><span>Diferencia total <strong class="num" data-total>0,00 €</strong></span></div>
+    </figure>
+  </section>
+
+  <div class="pista-h" aria-label="Secciones en horizontal">
+    <div class="carril">
+      <section class="panel-h" id="h-problema" data-nombre="Problema" aria-labelledby="t1"><span class="numero" aria-hidden="true">01</span>
+        <div class="contenido"><div class="texto"><span class="etiqueta">El problema</span><h2 id="t1">Pagas a una gestoría. ¿Sabes si lo hace bien?</h2><p>Firmas lo que te mandan cada trimestre. Si hay un error, la responsabilidad ante Hacienda es tuya.</p></div>
+          <ul class="preguntas">
+            <li><span class="casilla"><span>01</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Me han deducido todas las facturas?</span></li>
+            <li><span class="casilla"><span>02</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Por qué este trimestre pago más?</span></li>
+            <li><span class="casilla"><span>03</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Cuánto me saldrá la Renta?</span></li>
+            <li><span class="casilla"><span>04</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></span><span>¿Hay ayudas que nadie me ha contado?</span></li>
+          </ul></div>
+        <span class="avance">Sigue</span></section>
+      <section class="panel-h" id="h-como" data-nombre="Cómo funciona" aria-labelledby="t2"><span class="numero" aria-hidden="true">02</span>
+        <div class="contenido"><div class="texto"><span class="etiqueta">Cómo funciona</span><h2 id="t2">Tú guardas las facturas. ábaco hace las cuentas.</h2><p>Claude lee cada factura y un motor con las reglas fiscales rehace el 303, el 130 y el 349 al céntimo. Después lo compara con tu gestoría y te explica cada diferencia.</p></div>
+          <ol style="list-style:none;margin:0;padding:0;display:grid;gap:.8rem">
+            <li class="tarjeta funcion"><span class="chip">1</span><h3>Deja los PDF en una carpeta</h3></li>
+            <li class="tarjeta funcion"><span class="chip">2</span><h3>Claude lee, ábaco calcula</h3></li>
+            <li class="tarjeta funcion"><span class="chip">3</span><h3>Compara y te lo explica</h3></li>
+          </ol></div></section>
+      <section class="panel-h" id="h-panel" data-nombre="Panel" aria-labelledby="t3"><span class="numero" aria-hidden="true">03</span>
+        <div class="contenido"><div class="texto"><span class="etiqueta">El panel</span><h2 id="t3">Todo tu año fiscal, en una página</h2><p>Avisos, plazos, declaraciones y la Renta estimada. Se actualiza solo cada semana. Datos de ejemplo.</p></div>
+          <figure class="ventana" style="margin:0"><div class="ventana-barra" aria-hidden="true"><i></i><i></i><i></i><span>panel.html · ejemplo</span></div>
+            <div class="pv"><strong class="pv-titulo">Panel fiscal de Lucía</strong>
+              <div class="pv-bloque"><span class="pv-sub">Avisos</span><div class="pv-aviso alto"><b>Límite del seguro de salud</b><span>Quedan 40 € deducibles este año.</span></div></div>
+              <div class="pv-bloque"><span class="pv-sub">Declaraciones</span><div class="pv-fila"><span>T1 · T2 · T3</span><span class="chip ok">Comprobados</span></div><div class="pv-fila"><span class="num">1 feb</span><span>Próximo plazo · T4</span><span class="chip">Gestoría</span></div></div></div></figure></div></section>
+      <section class="panel-h" id="h-ahorro" data-nombre="Ahorro" aria-labelledby="t4"><span class="numero" aria-hidden="true">04</span>
+        <div class="contenido"><div class="texto"><span class="etiqueta">Más que revisar</span><h2 id="t4">Lo que tu gestoría no te cuenta</h2><p>Tu Renta antes de tiempo, los límites que te pueden costar una deducción y las ayudas que encajan contigo, con su fuente oficial.</p></div>
+          <div style="display:grid;gap:.8rem">
+            <div class="tarjeta funcion"><h3>Renta estimada: <span class="num" data-contar="640" data-prefijo="≈ ">≈ 640 €</span></h3><div class="ejemplo"><div class="linea-ej"><span>Deducción del alquiler (600 €)</span><span class="chip alerta">a 450 € del límite</span></div><div class="barra" aria-hidden="true"><span></span></div></div></div>
+            <div class="tarjeta funcion"><div class="linea-ej"><span>Bono Alquiler Joven</span><span class="chip ok">hasta 6.000 €</span></div><div class="linea-ej"><span>Retención para cubrir la Renta</span><span class="num">8 % → 11,5 %</span></div></div>
+          </div></div></section>
+      <section class="panel-h" id="h-privacidad" data-nombre="Privacidad" aria-labelledby="t5"><span class="numero" aria-hidden="true">05</span>
+        <div class="contenido" style="grid-template-columns:1fr"><div class="privacidad"><div style="display:grid;gap:1rem"><span class="etiqueta" style="color:inherit;opacity:.7">Privacidad</span><h2 id="t5">Tus impuestos no salen de tu ordenador.</h2><p>Un motor que corre junto a Claude y solo lee y escribe en tu carpeta.</p></div><ul><li><span>Sin cuentas ni servidores con tus datos fiscales.</span></li><li><span>Normativa validada con fuentes oficiales.</span></li><li><span>Necesitas una suscripción de pago a Claude.</span></li></ul></div></div></section>
+      <section class="panel-h" id="h-autor" data-nombre="Quién" aria-labelledby="t6"><span class="numero" aria-hidden="true">06</span>
+        <div class="contenido"><div class="texto"><span class="etiqueta">Quién está detrás</span><h2 id="t6">Lo hice para mí</h2><p>Soy Edgar, diseñador UX/UI y autónomo. Construí ábaco con Claude para revisar mis propios impuestos: la primera comprobación cuadró al céntimo y encontró un límite de deducción que estaba a punto de perder.</p><p><a href="https://dgalodesign.com" style="color:var(--marca);font-weight:600">Mi portfolio</a></p></div>
+          <svg viewBox="0 0 120 120" aria-hidden="true" style="max-width:16rem;justify-self:center"><rect width="120" height="120" rx="24" fill="var(--marca-suave)"/><path d="M18 40h84M18 60h84M18 80h84" stroke="var(--varilla)" stroke-width="2"/><circle cx="36" cy="40" r="8" fill="var(--cuenta)"/><circle cx="54" cy="40" r="8" fill="var(--cuenta)"/><circle cx="74" cy="60" r="8" fill="var(--cuenta-2)"/><circle cx="46" cy="80" r="8" fill="var(--cuenta-4)"/><circle cx="64" cy="80" r="8" fill="var(--cuenta-4)"/><circle cx="82" cy="80" r="8" fill="var(--cuenta-4)"/></svg></div></section>
+    </div>
+  </div>
+
+  <section class="banda" id="lista" aria-labelledby="t-lista">
+    <div class="envoltura cierre" data-revelar>
+      <span class="etiqueta">Lista de espera</span>
+      <h2 id="t-lista">Que tus impuestos cuadren. Siempre.</h2>
+      <p class="entradilla">ábaco está en pruebas. Escríbeme y te aviso cuando puedas usarlo.</p>
+      <a class="boton" href="mailto:dgalodesign@gmail.com?subject=Quiero%20probar%20%C3%A1baco">Quiero probar ábaco</a>
+      <p class="correo">Solo uso tu email para responderte y avisarte. <a href="../privacidad.html">Cómo trato tus datos</a>.</p>
+      <p class="correo">O escribe a <code id="direccion">dgalodesign@gmail.com</code> <button class="copiar" id="copiar" type="button">Copiar</button></p>
+    </div>
+  </section>
+</main>
+
+<div class="envoltura"><footer><p>ábaco no es una gestoría ni asesoramiento fiscal profesional, y no presenta declaraciones.</p><p>Un proyecto de <a href="https://dgalodesign.com">D Galo Design</a> · <a href="../privacidad.html">Privacidad</a></p></footer></div>
+
+<div class="selector" role="group" aria-label="Propuesta visual"><span>Visual</span>
+  <button type="button" data-elegir="a" aria-pressed="true">A<span class="largo"> · Impreso</span></button>
+  <button type="button" data-elegir="b" aria-pressed="false">B<span class="largo"> · Cobalto</span></button>
+  <button type="button" data-elegir="c" aria-pressed="false">C<span class="largo"> · Colores</span></button>
+  <a href="index.html">Propuestas</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="anim.js"></script>
+<script>
+// Varillas: scroll vertical que mueve el carril en horizontal (escritorio) o carrusel nativo (móvil).
+// La navegación es un ábaco: las cuentas de las secciones ya vistas pasan a la izquierda.
+(function () {
+  var paneles = Array.prototype.slice.call(document.querySelectorAll('.panel-h'));
+  var nav = document.querySelector('.nav-abaco');
+  var pista = document.querySelector('.pista-h'), carril = document.querySelector('.carril');
+  var movil = matchMedia('(max-width: 52rem)').matches;
+  var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cuentas = paneles.map(function (p, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Ir a ' + p.dataset.nombre);
+    var r = document.createElement('span'); r.className = 'rotulo'; r.textContent = p.dataset.nombre;
+    b.appendChild(r);
+    nav.appendChild(b);
+    b.addEventListener('click', function () { irA(i); });
+    return b;
+  });
+  var hechas = -1;
+  function colocar(activa) {
+    // Cuentas 0..activa a la izquierda (vistas); el resto, agrupadas a la derecha
+    var ancho = nav.clientWidth, paso = 26, n = cuentas.length;
+    cuentas.forEach(function (b, i) {
+      var x = i <= activa ? 11 + i * paso : ancho - 11 - (n - 1 - i) * paso;
+      b.querySelector('.rotulo').style.opacity = i === activa ? '1' : '0';
+      if (i === activa) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      if (window.gsap && !quieto) gsap.to(b, { left: x, duration: .55, ease: 'back.out(2)', overwrite: true });
+      else b.style.left = x + 'px';
+    });
+    if (activa === n - 1 && hechas < n - 1 && window.confetti && !quieto) {
+      var r = nav.getBoundingClientRect();
+      confetti({ particleCount: 40, spread: 60, startVelocity: 24, scalar: .9, shapes: ['circle'], origin: { x: (r.left + r.width * .3) / innerWidth, y: (r.top + 20) / innerHeight }, disableForReducedMotion: true });
+    }
+    hechas = activa;
+  }
+  var st = null;
+  function irA(i) {
+    if (movil) { pista.scrollTo({ left: paneles[i].offsetLeft, behavior: quieto ? 'auto' : 'smooth' }); pista.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth' }); return; }
+    if (st) window.scrollTo({ top: st.start + (st.end - st.start) * (i / (paneles.length - 1)), behavior: quieto ? 'auto' : 'smooth' });
+  }
+  document.querySelectorAll('a[href="#h-problema"]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); irA(0); }); });
+
+  if (!movil && window.gsap && window.ScrollTrigger) {
+    var tween = gsap.to(carril, { x: function () { return -(carril.scrollWidth - innerWidth); }, ease: 'none' });
+    st = ScrollTrigger.create({
+      trigger: pista, start: function () { return 'top ' + document.querySelector('.cabecera').offsetHeight + 'px'; }, end: function () { return '+=' + (carril.scrollWidth - innerWidth); },
+      pin: true, scrub: quieto ? true : .6, animation: tween, invalidateOnRefresh: true,
+      snap: quieto ? false : { snapTo: 1 / (paneles.length - 1), duration: .4, ease: 'power2.inOut' },
+      onUpdate: function (s) { var i = Math.round(s.progress * (paneles.length - 1)); if (i !== hechas) colocar(i); },
+    });
+    colocar(-1);
+  } else {
+    var observar = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) colocar(paneles.indexOf(e.target)); }); }, { root: pista, threshold: .6 });
+    paneles.forEach(function (p) { observar.observe(p); });
+    colocar(0);
+  }
+  addEventListener('resize', function () { colocar(hechas); });
+})();
+</script>
+</body>
+</html>

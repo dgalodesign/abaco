@@ -1,0 +1,24 @@
+{
+  "name": "autogestor",
+  "version": "0.4.0",
+  "description": "Segundo check fiscal para autónomos en estimación directa: recalcula el 303, el 130 y el 349 desde tus facturas, los compara con lo que presenta tu gestoría, estima la Renta y vigila plazos, ahorros y ayudas. Todo en local.",
+  "author": { "name": "Edgar D Galo", "url": "https://dgalodesign.com" },
+  "homepage": "https://dgalodesign.com",
+  "license": "MIT",
+  "keywords": ["autónomos", "impuestos", "IVA", "IRPF", "gestoría", "España"],
+  "userConfig": {
+    "carpeta": {
+      "type": "directory",
+      "title": "Carpeta del autónomo",
+      "description": "Carpeta donde guardas tus facturas y declaraciones (una subcarpeta por año). Autogestor guarda sus datos en _autogestor/ dentro de ella.",
+      "required": true
+    }
+  },
+  "mcpServers": {
+    "autogestor": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/autogestor-mcp.mjs"],
+      "env": { "AUTOGESTOR_DIR": "${user_config.carpeta}" }
+    }
+  }
+}

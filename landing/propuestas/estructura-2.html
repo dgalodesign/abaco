@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es" data-tema="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ábaco · propuesta estructura 2 · Recorrido guiado</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2b5a'/%3E%3Cpath d='M6 11h20M6 21h20' stroke='%23c9cede' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='11' r='3.6' fill='%23f0a92e'/%3E%3Ccircle cx='20' cy='21' r='3.6' fill='%23f0a92e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=Gabarito:wght@600;700;800&family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="temas.css">
+<style>
+/* Recorrido guiado: capítulos a la izquierda, escenario fijo a la derecha que cambia con cada capítulo */
+.recorrido { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 5rem); }
+.capitulos { display: grid; }
+.capitulo { min-height: 78vh; display: grid; align-content: center; gap: 1rem; padding-block: 2rem; }
+.capitulo .num-cap { font: 500 .8rem var(--mono); color: var(--marca); }
+[data-tema="b"] .capitulo .num-cap { color: var(--cuenta); }
+.capitulo p { color: var(--tinta-suave); max-width: 44ch; font-size: 1.05rem; }
+.lado { position: sticky; top: 5.5rem; height: calc(100vh - 7rem); display: grid; grid-template-rows: auto 1fr; gap: 1rem; padding-bottom: 1rem; }
+.paso-nav { display: flex; gap: .4rem; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+.paso-nav button { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--linea); background: var(--tarjeta); color: var(--tinta-suave); border-radius: 999px; padding: .35rem .7rem .35rem .4rem; font: 500 .78rem var(--texto); cursor: pointer; transition: background-color .25s, color .25s, border-color .25s; }
+.paso-nav b { width: 1.35rem; height: 1.35rem; border-radius: 50%; display: grid; place-items: center; font: 500 .66rem var(--mono); background: var(--fondo); color: var(--tinta-suave); transition: background-color .25s, color .25s; }
+.paso-nav button.hecho b { background: var(--ok-fondo); color: var(--ok); }
+.paso-nav button[aria-current="step"] { border-color: var(--marca); color: var(--tinta); }
+.paso-nav button[aria-current="step"] b { background: var(--cuenta); color: #1a1a1a; }
+.escenario { position: relative; border-radius: var(--radio-grande); background: var(--tarjeta); border: 1px solid var(--linea); overflow: hidden; box-shadow: 0 40px 70px -50px color-mix(in srgb, var(--marca) 55%, transparent); }
+.escena { position: absolute; inset: 0; padding: clamp(1.25rem, 3vw, 2.2rem); display: grid; align-content: center; gap: 1rem; opacity: 0; visibility: hidden; transition: opacity .45s, visibility .45s; }
+.escenario[data-escena="0"] .escena[data-n="0"], .escenario[data-escena="1"] .escena[data-n="1"], .escenario[data-escena="2"] .escena[data-n="2"],
+.escenario[data-escena="3"] .escena[data-n="3"], .escenario[data-escena="4"] .escena[data-n="4"], .escenario[data-escena="5"] .escena[data-n="5"] { opacity: 1; visibility: visible; }
+.grande { font-family: var(--display); font-weight: var(--display-peso); letter-spacing: var(--display-tracking); font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.05; }
+.doc { border: 1px solid var(--linea); border-radius: 10px; background: var(--fondo); padding: .8rem 1rem; display: flex; justify-content: space-between; gap: 1rem; align-items: center; font-size: .9rem; }
+.doc .num { font-size: .85rem; }
+.abanico { position: relative; height: 15rem; }
+.abanico .doc { position: absolute; left: 10%; right: 10%; top: 30%; box-shadow: 0 10px 24px -16px rgba(0,0,0,.4); background: var(--tarjeta); }
+.abanico .doc:nth-child(1) { transform: rotate(-7deg) translateY(-3.2rem); }
+.abanico .doc:nth-child(2) { transform: rotate(-2deg) translateY(-1.1rem); }
+.abanico .doc:nth-child(3) { transform: rotate(3deg) translateY(1rem); }
+.abanico .doc:nth-child(4) { transform: rotate(7deg) translateY(3.1rem); }
+.tabla-mini { display: grid; grid-template-columns: 1fr auto auto; gap: .5rem 1rem; font-size: .88rem; align-items: center; }
+.tabla-mini .th { font: 500 .68rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-suave); }
+.tabla-mini .n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tabla-mini .total { border-top: 1px solid var(--linea); padding-top: .5rem; font-weight: 600; }
+.comparar { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: .6rem 1rem; align-items: center; font-size: .9rem; }
+.comparar .n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.ok-icono { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--ok-fondo); color: var(--ok); display: grid; place-items: center; font-size: .8rem; font-weight: 700; }
+.mini-panel { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; font-size: .85rem; }
+.mini-panel .pv-bloque { padding: .75rem .85rem; }
+@media (max-width: 52rem) {
+  .recorrido { grid-template-columns: 1fr; }
+  .lado { order: -1; top: 4.2rem; height: 46vh; z-index: 5; background: var(--fondo); padding-top: .5rem; }
+  .paso-nav button span { display: none; }
+  .paso-nav button { padding: .3rem; }
+  .capitulo { min-height: 92vh; align-content: end; padding-bottom: 14vh; }
+  .abanico { height: 11rem; }
+  .mini-panel { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="envoltura">
+    <a class="logo" href="#inicio" aria-label="ábaco, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--marca)"/><path d="M6 11h20M6 21h20" stroke="var(--sobre-marca)" stroke-opacity=".55" stroke-width="1.5"/><circle cx="12" cy="11" r="3.6" fill="var(--cuenta)"/><circle cx="20" cy="21" r="3.6" fill="var(--cuenta-2)"/></svg>
+      ábaco
+    </a>
+    <nav class="navegacion" aria-label="Principal">
+      <a href="#recorrido">Recorrido</a>
+      <a href="#privacidad">Privacidad</a>
+      <a href="#autor">Quién lo hace</a>
+      <a class="boton" href="#lista">Quiero probarlo</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="envoltura hero" id="inicio" aria-labelledby="titulo">
+    <div class="hero-texto">
+      <span class="etiqueta">Para autónomos en España</span>
+      <h1 id="titulo" data-partir>Tus impuestos, <span class="marca-texto">cuenta por cuenta.</span></h1>
+      <p class="entradilla">ábaco recalcula tus impuestos desde tus facturas, revisa lo que presenta tu gestoría y te avisa de lo que te puedes ahorrar.</p>
+      <div class="acciones">
+        <a class="boton" href="#recorrido">Haz el recorrido</a>
+        <a class="boton secundario" href="#lista">Apúntate a la lista</a>
+      </div>
+      <p class="nota-hero">6 pasos · 2 minutos · funciona con Claude y tus datos no salen de tu ordenador.</p>
+    </div>
+    <figure class="abaco" aria-label="Ábaco de ejemplo: compara los modelos 303, 130 y 349 de tu gestoría con el cálculo de ábaco. Puedes mover las cuentas.">
+      <div class="abaco-cab"><span class="etiqueta">Tercer trimestre · ejemplo</span><span class="pista">Mueve las cuentas</span></div>
+      <div class="fila"><span class="modelo">303<small>IVA</small></span><div class="varilla" data-cuentas="7" data-objetivo="4" data-valor="21"></div><span class="resultado">0,00 €</span></div>
+      <div class="fila"><span class="modelo">130<small>IRPF</small></span><div class="varilla" data-cuentas="6" data-objetivo="2" data-valor="15"></div><span class="resultado">0,00 €</span></div>
+      <div class="fila"><span class="modelo">349<small>UE</small></span><div class="varilla" data-cuentas="5" data-objetivo="3" data-valor="9"></div><span class="resultado">0,00 €</span></div>
+      <div class="abaco-pie"><span>29 facturas revisadas</span><span>Diferencia total <strong class="num" data-total>0,00 €</strong></span></div>
+    </figure>
+  </section>
+
+  <section class="envoltura recorrido" id="recorrido" aria-label="Recorrido: cómo funciona ábaco en 6 pasos">
+    <div class="capitulos">
+      <article class="capitulo"><span class="num-cap">01 · El problema</span><h2>Firmas cada trimestre sin saber si cuadra</h2><p>Tu gestoría te manda el 303 y el 130 y tú los firmas. Si hay un error, la responsabilidad ante Hacienda es tuya. ábaco existe para que puedas comprobarlo.</p></article>
+      <article class="capitulo"><span class="num-cap">02 · Tus facturas</span><h2>Deja los PDF en una carpeta</h2><p>Facturas emitidas y recibidas, nóminas y lo que te envía tu gestoría, tal cual llegan. Sin plantillas ni formularios.</p></article>
+      <article class="capitulo"><span class="num-cap">03 · El cálculo</span><h2>Claude lee, ábaco calcula al céntimo</h2><p>Claude extrae los datos de cada factura y un motor con las reglas fiscales rehace tus modelos: siempre igual, sin aproximaciones.</p></article>
+      <article class="capitulo"><span class="num-cap">04 · La comparación</span><h2>Casilla a casilla con tu gestoría</h2><p>Si algo no cuadra, ábaco te dice qué factura es, por qué pasa y si merece la pena reclamarlo.</p></article>
+      <article class="capitulo"><span class="num-cap">05 · El panel</span><h2>Todo tu año fiscal en una página</h2><p>Avisos, plazos, declaraciones y lo que viene. Se actualiza solo cada semana y te avisa siete días antes de cada plazo.</p></article>
+      <article class="capitulo"><span class="num-cap">06 · El ahorro</span><h2>Lo que nadie te ha contado</h2><p>Tu Renta antes de tiempo, los límites que te pueden costar una deducción y las ayudas que encajan contigo, con su fuente oficial.</p></article>
+    </div>
+
+    <div class="lado">
+      <ol class="paso-nav" aria-label="Pasos del recorrido">
+        <li><button type="button"><b>01</b><span>Problema</span></button></li>
+        <li><button type="button"><b>02</b><span>Facturas</span></button></li>
+        <li><button type="button"><b>03</b><span>Cálculo</span></button></li>
+        <li><button type="button"><b>04</b><span>Comparación</span></button></li>
+        <li><button type="button"><b>05</b><span>Panel</span></button></li>
+        <li><button type="button"><b>06</b><span>Ahorro</span></button></li>
+      </ol>
+      <div class="escenario" data-escena="0" aria-live="polite">
+        <div class="escena" data-n="0">
+          <span class="etiqueta">Modelo 303 · T3 2026</span>
+          <p class="grande">¿Cuadra lo que firmas?</p>
+          <div class="doc"><span>Resultado a ingresar (casilla 71)</span><span class="num">212,40 €</span></div>
+          <div class="doc"><span>Firmado por</span><span>tú</span></div>
+          <div class="doc"><span>Revisado por</span><span class="chip alerta">nadie</span></div>
+        </div>
+        <div class="escena" data-n="1">
+          <span class="etiqueta">Carpeta · T3 2026</span>
+          <div class="abanico">
+            <div class="doc"><span>T3 • 07 Software.pdf</span><span class="num">18,00 €</span></div>
+            <div class="doc"><span>T3 • 08 Luz.pdf</span><span class="num">102,91 €</span></div>
+            <div class="doc"><span>T3 • 09 Webcam.pdf</span><span class="num">129,00 €</span></div>
+            <div class="doc"><span>F-0032.pdf · ingreso</span><span class="num">848,00 €</span></div>
+          </div>
+        </div>
+        <div class="escena" data-n="2">
+          <span class="etiqueta">IVA del trimestre · cálculo propio</span>
+          <div class="tabla-mini">
+            <span class="th">Concepto</span><span class="th n">Base</span><span class="th n">Cuota</span>
+            <span>IVA repercutido</span><span class="n">2.000,00</span><span class="n">420,00</span>
+            <span>Adquisiciones UE</span><span class="n">83,00</span><span class="n">17,43</span>
+            <span>IVA soportado deducible</span><span class="n">—</span><span class="n">−225,03</span>
+            <span class="total">Resultado</span><span class="total n"></span><span class="total n">212,40</span>
+          </div>
+        </div>
+        <div class="escena" data-n="3">
+          <span class="etiqueta">Tu gestoría vs. ábaco</span>
+          <div class="comparar">
+            <span class="th etiqueta">Casilla</span><span class="etiqueta" style="text-align:right">Gestoría</span><span class="etiqueta" style="text-align:right">ábaco</span><span></span>
+            <span class="num">27</span><span class="n">437,43</span><span class="n">437,43</span><span class="ok-icono">✓</span>
+            <span class="num">45</span><span class="n">225,03</span><span class="n">225,03</span><span class="ok-icono">✓</span>
+            <span class="num">71</span><span class="n">212,40</span><span class="n">212,40</span><span class="ok-icono">✓</span>
+          </div>
+          <div class="doc"><span>Diferencia total</span><strong class="num" style="color:var(--ok)">0,00 €</strong></div>
+        </div>
+        <div class="escena" data-n="4">
+          <span class="etiqueta">Panel fiscal · datos de ejemplo</span>
+          <div class="mini-panel">
+            <div class="pv-bloque"><span class="pv-sub">Avisos</span><div class="pv-aviso alto"><b>Seguro de salud</b><span>Quedan 40 € deducibles</span></div></div>
+            <div class="pv-bloque"><span class="pv-sub">Próximo plazo</span><div class="pv-fila"><span class="num">1 feb</span><span>303 · 130 · 390</span></div></div>
+            <div class="pv-bloque"><span class="pv-sub">Trimestres</span><div class="pv-fila"><span>T1 · T2 · T3</span><span class="chip ok">Comprobados</span></div></div>
+            <div class="pv-bloque"><span class="pv-sub">Ingresos del año</span><strong class="num" style="font-size:1.2rem">10.780 €</strong></div>
+          </div>
+        </div>
+        <div class="escena" data-n="5">
+          <span class="etiqueta">Renta 2026 · estimación</span>
+          <p class="grande" style="color:var(--rojo)">A pagar ≈ 640 €</p>
+          <div class="barra" style="--lleno:98%" aria-hidden="true"><span></span></div>
+          <p style="color:var(--tinta-suave);font-size:.9rem">A 450 € del límite de la deducción del alquiler (600 €).</p>
+          <div class="doc"><span>Bono Alquiler Joven</span><span class="chip ok">hasta 6.000 €</span></div>
+          <div class="doc"><span>Retención para cubrir la Renta</span><span class="num">8 % → 11,5 %</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="banda" id="privacidad" aria-labelledby="t-priv">
+    <div class="envoltura">
+      <div class="privacidad" data-revelar>
+        <div style="display:grid;gap:1rem"><span class="etiqueta" style="color:inherit;opacity:.7">Privacidad</span><h2 id="t-priv">Tus impuestos no salen de tu ordenador.</h2><p>ábaco no es una web donde subes tus facturas. Es un motor que corre en tu ordenador junto a Claude, y solo lee y escribe en tu carpeta.</p></div>
+        <ul><li><span>Sin cuentas ni servidores con tus datos fiscales.</span></li><li><span>Normativa validada con fuentes oficiales, con el enlace a cada una.</span></li><li><span>Para autónomos en estimación directa con IVA general. Necesitas una suscripción de pago a Claude.</span></li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="banda" id="autor" aria-labelledby="t-autor" style="background:var(--fondo-2)">
+    <div class="envoltura autor" data-revelar>
+      <svg viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" rx="24" fill="var(--marca-suave)"/><path d="M18 40h84M18 60h84M18 80h84" stroke="var(--varilla)" stroke-width="2"/><circle cx="36" cy="40" r="8" fill="var(--cuenta)"/><circle cx="54" cy="40" r="8" fill="var(--cuenta)"/><circle cx="74" cy="60" r="8" fill="var(--cuenta-2)"/><circle cx="46" cy="80" r="8" fill="var(--cuenta-4)"/><circle cx="64" cy="80" r="8" fill="var(--cuenta-4)"/><circle cx="82" cy="80" r="8" fill="var(--cuenta-4)"/></svg>
+      <div class="autor-texto"><span class="etiqueta">Quién está detrás</span><h2 id="t-autor">Lo hice para mí</h2>
+        <p>Soy Edgar, diseñador UX/UI y autónomo. Cada trimestre firmaba lo que me mandaba mi gestoría sin entender del todo qué estaba firmando, y la Renta siempre llegaba con sorpresa.</p>
+        <p>Así que construí ábaco con Claude para revisar mis propios impuestos. La primera comprobación cuadró al céntimo, y por el camino encontró un límite de deducción que estaba a punto de perder.</p>
+        <p><a href="https://dgalodesign.com">Mi portfolio</a></p></div>
+    </div>
+  </section>
+
+  <section class="banda" id="lista" aria-labelledby="t-lista">
+    <div class="envoltura cierre" data-revelar>
+      <span class="etiqueta">Lista de espera</span>
+      <h2 id="t-lista">Que tus impuestos cuadren. Siempre.</h2>
+      <p class="entradilla">ábaco está en pruebas. Escríbeme y te aviso cuando puedas usarlo.</p>
+      <a class="boton" href="mailto:dgalodesign@gmail.com?subject=Quiero%20probar%20%C3%A1baco">Quiero probar ábaco</a>
+      <p class="correo">Solo uso tu email para responderte y avisarte. <a href="../privacidad.html">Cómo trato tus datos</a>.</p>
+      <p class="correo">O escribe a <code id="direccion">dgalodesign@gmail.com</code> <button class="copiar" id="copiar" type="button">Copiar</button></p>
+    </div>
+  </section>
+</main>
+
+<div class="envoltura"><footer><p>ábaco no es una gestoría ni asesoramiento fiscal profesional, y no presenta declaraciones. Te ayuda a revisar tus números y a preguntar mejor.</p><p>Un proyecto de <a href="https://dgalodesign.com">D Galo Design</a> · <a href="../privacidad.html">Privacidad</a></p></footer></div>
+
+<div class="selector" role="group" aria-label="Propuesta visual"><span>Visual</span>
+  <button type="button" data-elegir="a" aria-pressed="true">A<span class="largo"> · Impreso</span></button>
+  <button type="button" data-elegir="b" aria-pressed="false">B<span class="largo"> · Cobalto</span></button>
+  <button type="button" data-elegir="c" aria-pressed="false">C<span class="largo"> · Colores</span></button>
+  <a href="index.html">Propuestas</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="anim.js"></script>
+</body>
+</html>

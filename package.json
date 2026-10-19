@@ -1,0 +1,30 @@
+{
+  "name": "autogestor",
+  "version": "1.0.0",
+  "description": "Segundo check fiscal para autónomos en estimación directa",
+  "scripts": {
+    "comparar": "tsx src/cli.ts comparar",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "panel": "tsx src/cli.ts panel",
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "mcp": "tsx src/mcp.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "unpdf": "^1.9.0",
+    "xlsx": "^0.18.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "private": true
+}
